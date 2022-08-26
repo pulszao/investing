@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:investing/components/card/menu_card.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../components/cards/menu_card.dart';
 import '../../constants.dart';
 import '../../models/chart_data.dart';
 
