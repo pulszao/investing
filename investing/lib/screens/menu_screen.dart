@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import '../../components/menu_card.dart';
+import '../components/cards/menu_card.dart';
 import '../../constants.dart';
 import '../../models/chart_data.dart';
 
@@ -117,11 +117,12 @@ class _MenuScreenState extends State<MenuScreen> {
               child: MenuCardWidget(
                 screenWidth: MediaQuery.of(context).size.width,
                 itemModel: CardItemModel(
-                    description: 'Watchlist',
-                    iconData: Icons.reorder,
-                    onPressed: () {
-                      // TODO: create Watchlist Screen
-                    }),
+                  description: 'Watchlist',
+                  iconData: Icons.reorder,
+                  onPressed: () {
+                    // TODO: create Watchlist Screen
+                  },
+                ),
               ),
             ),
           ],

@@ -1,6 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
-import '../../components/button.dart';
+import '../../components/buttons/button.dart';
 import '../../constants.dart';
 import '../menu_screen.dart';
 
