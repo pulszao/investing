@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
+import 'package:investing/screens/watchlist/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../constants.dart';
@@ -119,9 +120,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 itemModel: CardItemModel(
                   description: 'Watchlist',
                   iconData: Icons.reorder,
-                  onPressed: () {
-                    // TODO: create Watchlist Screen
-                  },
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => const WatchlistScreen()),
+                  ),
                 ),
               ),
             ),
