@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
+import 'package:investing/screens/portfolio/portfolio.dart';
 import 'package:investing/screens/watchlist/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -227,9 +228,10 @@ class _MenuScreenState extends State<MenuScreen> {
                     children: [
                       FloatingActionButton(
                         heroTag: 'portfolio',
-                        onPressed: () {
-                          // TODO: create Portfolio Screen
-                        },
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) => const PortfolioScreen()),
+                        ),
                         materialTapTargetSize: MaterialTapTargetSize.padded,
                         mini: true,
                         elevation: 2,
