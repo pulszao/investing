@@ -17,6 +17,7 @@ dependencies:
   cupertino_icons: ^1.0.5
   material_design_icons_flutter: ^5.0.6996
   syncfusion_flutter_charts: ^20.2.39
+  dropdown_search: ^5.0.2
 
 
 dev_dependencies:

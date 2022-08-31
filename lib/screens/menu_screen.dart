@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
 import 'package:investing/screens/portfolio/portfolio.dart';
+import 'package:investing/screens/transactions/transactions_screen.dart';
 import 'package:investing/screens/watchlist/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -107,11 +108,13 @@ class _MenuScreenState extends State<MenuScreen> {
               child: MenuCardWidget(
                 screenWidth: MediaQuery.of(context).size.width,
                 itemModel: CardItemModel(
-                    description: 'Transações',
-                    iconData: MdiIcons.swapHorizontal,
-                    onPressed: () {
-                      // TODO: create Transactions Screen
-                    }),
+                  description: 'Transações',
+                  iconData: MdiIcons.swapHorizontal,
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => const TransactionsScreen()),
+                  ),
+                ),
               ),
             ),
             Padding(
