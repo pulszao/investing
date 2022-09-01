@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:investing/provider/transactions/transactions_provider.dart';
 import 'package:investing/screens/authentication/login_screen.dart';
+import 'package:provider/provider.dart';
 import 'constants.dart';
 
 void main() {
   runApp(
-    const Investing(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => TransactionProvider()),
+      ],
+      child: const Investing(),
+    ),
   );
 }
 
-// test
 class Investing extends StatelessWidget {
   const Investing({Key? key}) : super(key: key);
 

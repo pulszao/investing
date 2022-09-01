@@ -3,9 +3,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:investing/components/button/small_button.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
+import 'package:intl/intl.dart';
 import '../../components/button/button.dart';
 import '../../constants.dart';
+import '../../provider/transactions/transactions_provider.dart';
 
 class FilterTransactionModal extends StatelessWidget {
   const FilterTransactionModal({Key? key}) : super(key: key);
@@ -13,6 +16,8 @@ class FilterTransactionModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double itemWidth = MediaQuery.of(context).size.width * 0.4;
+    Operation operation = Provider.of<TransactionProvider>(context).getOperation();
+    DateTime? filterDate = Provider.of<TransactionProvider>(context).getFilterDate();
     DateTime now = DateTime.now();
 
     void showAndroidDatePicker() async {
@@ -23,7 +28,7 @@ class FilterTransactionModal extends StatelessWidget {
         lastDate: now,
       );
       if (picked != null) {
-        // TODO: set the picked date
+        Provider.of<TransactionProvider>(context, listen: false).setFilterDate(picked);
       }
     }
 
@@ -40,16 +45,16 @@ class FilterTransactionModal extends StatelessWidget {
                 children: [
                   SmallButton(
                     width: itemWidth,
-                    onPressed: () {},
+                    onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.buy),
                     text: 'Compra',
-                    backgroundColor: kColorScheme.surface,
+                    backgroundColor: operation == Operation.buy ? kColorScheme.primary : kColorScheme.surface,
                   ),
                   const SizedBox(width: 8),
                   SmallButton(
                     width: itemWidth,
-                    onPressed: () {},
+                    onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.sell),
                     text: 'Venda',
-                    backgroundColor: kColorScheme.surface,
+                    backgroundColor: operation == Operation.sell ? kColorScheme.primary : kColorScheme.surface,
                   ),
                 ],
               ),
@@ -95,7 +100,7 @@ class FilterTransactionModal extends StatelessWidget {
                               builder: (_) => SizedBox(
                                 height: 220,
                                 child: CupertinoDatePicker(
-                                  onDateTimeChanged: (date) => {},
+                                  onDateTimeChanged: (date) => Provider.of<TransactionProvider>(context, listen: false).setFilterDate(date),
                                   backgroundColor: Colors.grey.shade300,
                                   mode: CupertinoDatePickerMode.date,
                                   initialDateTime: now,
@@ -121,8 +126,7 @@ class FilterTransactionModal extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                // TODO: display the buy date
-                                '',
+                                filterDate != null ? DateFormat('dd/MM/yyyy').format(filterDate) : '',
                                 style: kBaseTextStyle(
                                   fontSize: 17,
                                   color: Colors.white,

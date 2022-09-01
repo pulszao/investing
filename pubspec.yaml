@@ -18,6 +18,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.6996
   syncfusion_flutter_charts: ^20.2.39
   dropdown_search: ^5.0.2
+  provider: ^6.0.3
 
 
 dev_dependencies:
