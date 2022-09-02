@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
 import 'package:investing/screens/portfolio/portfolio.dart';
+import 'package:investing/screens/profile/profile_screen.dart';
 import 'package:investing/screens/transactions/transactions_screen.dart';
 import 'package:investing/screens/watchlist/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -52,9 +53,10 @@ class _MenuScreenState extends State<MenuScreen> {
                   style: kBaseTextStyle(fontSize: 24),
                 ),
                 GestureDetector(
-                  onTap: () {
-                    // TODO: create Profile Screen
-                  },
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => const ProfileScreen()),
+                  ),
                   child: Column(
                     children: [
                       CircleAvatar(
