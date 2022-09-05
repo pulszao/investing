@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
 import 'package:investing/screens/portfolio/portfolio.dart';
 import 'package:investing/screens/profile/profile_screen.dart';
+import 'package:investing/screens/rentability/rentability_screen.dart';
 import 'package:investing/screens/transactions/transactions_screen.dart';
 import 'package:investing/screens/watchlist/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -101,7 +102,10 @@ class _MenuScreenState extends State<MenuScreen> {
                 itemModel: CardItemModel(
                   description: 'Rentabilidade',
                   iconData: MdiIcons.finance,
-                  onPressed: () {},
+                  onPressed: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (BuildContext context) => const RentabilityScreen()),
+                  ),
                 ),
               ),
             ),
@@ -309,7 +313,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     children: [
                       FloatingActionButton(
                         heroTag: 'sector_allocation',
-                        onPressed: () {},
+                        onPressed: () {
+                          // TODO: add sector allocation screen
+                        },
                         materialTapTargetSize: MaterialTapTargetSize.padded,
                         mini: true,
                         elevation: 2,
