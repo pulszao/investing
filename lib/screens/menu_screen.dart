@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investing/components/card/menu_card.dart';
 import 'package:investing/screens/portfolio/portfolio.dart';
+import 'package:investing/screens/portfolio_sector/portfolio_sector_screen.dart';
 import 'package:investing/screens/profile/profile_screen.dart';
 import 'package:investing/screens/rentability/rentability_screen.dart';
 import 'package:investing/screens/transactions/transactions_screen.dart';
@@ -313,9 +314,10 @@ class _MenuScreenState extends State<MenuScreen> {
                     children: [
                       FloatingActionButton(
                         heroTag: 'sector_allocation',
-                        onPressed: () {
-                          // TODO: add sector allocation screen
-                        },
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) => const PortfolioSectorScreen()),
+                        ),
                         materialTapTargetSize: MaterialTapTargetSize.padded,
                         mini: true,
                         elevation: 2,
