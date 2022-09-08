@@ -8,6 +8,7 @@ class StockWatchlistCard extends StatelessWidget {
   final double dailyChange;
   final String stockSymbol;
   final String stockDescription;
+  final void Function()? removeStock;
 
   const StockWatchlistCard({
     Key? key,
@@ -15,6 +16,7 @@ class StockWatchlistCard extends StatelessWidget {
     required this.stockDescription,
     required this.nowPrice,
     required this.dailyChange,
+    required this.removeStock,
   }) : super(key: key);
 
   @override
@@ -25,11 +27,9 @@ class StockWatchlistCard extends StatelessWidget {
           context: context,
           builder: (_) => StandardModal(
             label: 'Excluir item',
-            body: 'Tem certeza que você deseja remover WEGE3 de sua watchlist?',
+            body: 'Tem certeza que você deseja remover $stockSymbol de sua watchlist?',
             confirmButtonLabel: 'Remover',
-            confirmButtonFunction: () {
-              Navigator.pop(context);
-            },
+            confirmButtonFunction: removeStock,
           ),
         );
       },
@@ -71,13 +71,13 @@ class StockWatchlistCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'R\$$nowPrice',
+                        'R\$${nowPrice.toStringAsFixed(2)}',
                         style: kBaseTextStyle(
                           fontSize: 17,
                         ),
                       ),
                       Text(
-                        '$dailyChange%',
+                        '${dailyChange.toStringAsFixed(2)}%',
                         style: kBaseTextStyle(
                           fontSize: 17,
                           color: dailyChange > 0 ? Colors.greenAccent : Colors.redAccent,
