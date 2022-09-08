@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const String kIEXToken = 'pk_6e745d9628ba4988b0c47b5bd151622e';
+
 const ColorScheme kColorScheme = ColorScheme.dark(
   background: Color(0xFF303030),
   onBackground: Color(0xFF1E1E1E),
@@ -30,6 +32,9 @@ Color kPrimaryYellow = const Color(0xFFFEC861);
 Color kSecondaryYellow = const Color(0xFF6E4D0F);
 Color kTableHeadingColor = const Color(0xFF08284A);
 Color kModalBackgroundColor = const Color(0xFF161616);
+Color kMutedTextColor = const Color(0xFFCCCCCC);
+Color kSuccessColor = Colors.green;
+Color kWarningColor = Colors.amber;
 
 TextStyle kBaseTextStyle({double? fontSize, Color? color, FontWeight? fontWeight, TextDecoration? decoration, Paint? background}) {
   return TextStyle(
@@ -47,3 +52,39 @@ Widget kCircularLoading = const SizedBox(
     child: CircularProgressIndicator(),
   ),
 );
+
+Widget notFound({double? height = 200, double? width = 390, required String label, AssetImage? image, Widget? icon}) {
+  return Center(
+    child: Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        SizedBox(
+          height: height,
+          width: width,
+        ),
+        CircleAvatar(
+          radius: 35,
+          backgroundColor: kColorScheme.primary.withOpacity(0.4),
+          child: icon ??
+              Image(
+                image: image ?? const AssetImage('images/add-list.png'),
+                height: 55.0,
+                color: kColorScheme.primary,
+              ),
+        ),
+        const SizedBox(
+          height: 5,
+        ),
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: kBaseTextStyle(
+            fontSize: 15,
+            color: kMutedTextColor,
+          ),
+        ),
+      ],
+    ),
+  );
+}

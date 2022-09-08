@@ -19,6 +19,8 @@ dependencies:
   syncfusion_flutter_charts: ^20.2.39
   dropdown_search: ^5.0.2
   provider: ^6.0.3
+  http: ^0.13.4
+  flutter_secure_storage: ^5.0.2
 
 
 dev_dependencies:
