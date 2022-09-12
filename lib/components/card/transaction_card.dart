@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investing/constants.dart';
-
+import 'package:provider/provider.dart';
+import '../../provider/transactions/transactions_provider.dart';
+import '../../storage/user_secure_storage.dart';
 import '../modal/standard_modal.dart';
 
 class TransactionCard extends StatelessWidget {
+  final Operation operation;
+  final String sector;
   final String stockSymbol;
   final String stockDescription;
   final double quantity;
@@ -14,12 +18,14 @@ class TransactionCard extends StatelessWidget {
 
   const TransactionCard({
     Key? key,
+    required this.operation,
     required this.stockSymbol,
     required this.quantity,
     required this.buyPrice,
     required this.fees,
     required this.stockDescription,
     required this.buyDate,
+    required this.sector,
   }) : super(key: key);
 
   @override
@@ -32,8 +38,34 @@ class TransactionCard extends StatelessWidget {
             label: 'Excluir item',
             body: 'Tem certeza que você deseja remover $stockSymbol (${DateFormat('dd/MM/yyyy').format(buyDate)}) de suas transações?',
             confirmButtonLabel: 'Remover',
-            confirmButtonFunction: () {
+            confirmButtonFunction: () async {
+              List<TransactionCard> stocksWidgets = [];
+              // get all transactions
+              List transactions = await UserSecureStorage.getTransactions();
+
+              // TODO: remove selected transaction (via index)
+
+              // build stocks widgets
+              for (Map? data in transactions) {
+                stocksWidgets.add(
+                  TransactionCard(
+                    operation: data!['operation'] == 'buy' ? Operation.buy : Operation.sell,
+                    stockSymbol: data['stock'],
+                    stockDescription: data['company_name'],
+                    buyDate: DateFormat('dd/MM/yyyy').parse(data['buy_date']),
+                    buyPrice: data['buy_price'],
+                    fees: data['fees'],
+                    quantity: data['shares'],
+                    sector: data['sector'],
+                  ),
+                );
+              }
+
+              // update transactions
+              Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
               Navigator.pop(context);
+
+              await UserSecureStorage.setTransactions(transactions);
             },
           ),
         );
@@ -69,12 +101,25 @@ class TransactionCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Text(
-                    DateFormat('dd/MM/yyyy').format(buyDate),
-                    style: kBaseTextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        operation == Operation.buy ? 'Compra' : 'Venda',
+                        style: kBaseTextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: operation == Operation.buy ? kSuccessColor : kColorScheme.error,
+                        ),
+                      ),
+                      Text(
+                        DateFormat('dd/MM/yyyy').format(buyDate),
+                        style: kBaseTextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -94,16 +139,16 @@ class TransactionCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Preço de Compra: '),
-                        Text('R\$ $buyPrice'),
+                        const Text('Taxa: '),
+                        Text('R\$ $fees'),
                       ],
                     ),
                     const SizedBox(height: 3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Taxa: '),
-                        Text('R\$ $fees'),
+                        Text('Preço de ${operation == Operation.buy ? 'Compra:' : 'Venda:'} '),
+                        Text('R\$ $buyPrice'),
                       ],
                     ),
                     const SizedBox(height: 3),

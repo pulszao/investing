@@ -4,7 +4,7 @@ const String kIEXToken = 'pk_6e745d9628ba4988b0c47b5bd151622e';
 
 const ColorScheme kColorScheme = ColorScheme.dark(
   background: Color(0xFF303030),
-  onBackground: Color(0xFF1E1E1E),
+  onBackground: Color(0xFF545454),
   surface: Color(0xFF08284A),
   onSurface: Colors.white,
   primary: Color(0xFF58B4FD),
@@ -13,7 +13,7 @@ const ColorScheme kColorScheme = ColorScheme.dark(
   onSecondary: Color(0xFF631310),
   tertiary: Color(0xFF61D761),
   onTertiary: Color(0xFF0E520E),
-  error: Color(0xFFFEC861),
+  error: Color(0xFFE74C3C),
   onError: Color(0xFF6E4D0F),
   brightness: Brightness.dark,
   surfaceTint: Colors.white,
