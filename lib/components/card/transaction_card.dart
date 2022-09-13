@@ -7,6 +7,7 @@ import '../../storage/user_secure_storage.dart';
 import '../modal/standard_modal.dart';
 
 class TransactionCard extends StatelessWidget {
+  final int id;
   final Operation operation;
   final String sector;
   final String stockSymbol;
@@ -18,6 +19,7 @@ class TransactionCard extends StatelessWidget {
 
   const TransactionCard({
     Key? key,
+    required this.id,
     required this.operation,
     required this.stockSymbol,
     required this.quantity,
@@ -43,12 +45,15 @@ class TransactionCard extends StatelessWidget {
               // get all transactions
               List transactions = await UserSecureStorage.getTransactions();
 
-              // TODO: remove selected transaction (via index)
+              // remove selected transaction (via index)
+              transactions.remove(transactions[id]);
 
               // build stocks widgets
-              for (Map? data in transactions) {
+              for (Map? item in transactions) {
+                Map? data = item![item.keys.first];
                 stocksWidgets.add(
                   TransactionCard(
+                    id: id,
                     operation: data!['operation'] == 'buy' ? Operation.buy : Operation.sell,
                     stockSymbol: data['stock'],
                     stockDescription: data['company_name'],

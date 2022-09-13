@@ -361,21 +361,27 @@ class AddTransactionModal extends StatelessWidget {
                                   // check for stock
                                   Map? data = await getSingleQuote(code: Provider.of<TransactionProvider>(context, listen: false).getStock()!);
 
+                                  // get transaction index
+                                  int index = await UserSecureStorage.getTransactionIndex();
+
                                   // save new transaction
                                   await UserSecureStorage.addTransaction({
-                                    'operation': operation.name,
-                                    'stock': data!['symbol'],
-                                    'company_name': data['companyName'],
-                                    'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
-                                    'buy_price': price,
-                                    'shares': quantity,
-                                    'sector': sector.sector,
-                                    'fees': fees,
+                                    '$index': {
+                                      'operation': operation.name,
+                                      'stock': data!['symbol'],
+                                      'company_name': data['companyName'],
+                                      'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
+                                      'buy_price': price,
+                                      'shares': quantity,
+                                      'sector': sector.sector,
+                                      'fees': fees,
+                                    }
                                   });
 
                                   // update screen
                                   Provider.of<TransactionProvider>(context, listen: false).addTransactionsWidgets(
                                     TransactionCard(
+                                      id: index,
                                       operation: operation,
                                       stockSymbol: data['symbol'],
                                       stockDescription: data['companyName'],
@@ -387,6 +393,8 @@ class AddTransactionModal extends StatelessWidget {
                                     ),
                                   );
 
+                                  // clear buy date
+                                  Provider.of<TransactionProvider>(context, listen: false).setBuyDate(null);
                                   // success/error modal
                                   displayConfirmationModal(success: true);
                                 } catch (e) {
