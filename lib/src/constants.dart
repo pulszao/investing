@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const String kIEXToken = 'pk_6e745d9628ba4988b0c47b5bd151622e';
+const String kIEXToken = 'YOUR_API_TOKEN'; // TODO: create your own API KEY
 
 const ColorScheme kColorScheme = ColorScheme.dark(
   background: Color(0xFF303030),
