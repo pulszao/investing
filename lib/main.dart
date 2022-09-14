@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:investing/provider/transactions/transactions_provider.dart';
-import 'package:investing/provider/wachlist/watchlist_provider.dart';
-import 'package:investing/screens/authentication/login_screen.dart';
+import 'package:investing/src/login/controller/login_controller.dart';
+import 'package:investing/src/login/view/login_screen.dart';
+import 'package:investing/src/transactions/controller/transactions_controller.dart';
+import 'package:investing/src/watchlist/controller/watchlist_controller.dart';
 import 'package:provider/provider.dart';
-import 'constants.dart';
+import 'src/constants.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => WatchlistProvider()),
       ],

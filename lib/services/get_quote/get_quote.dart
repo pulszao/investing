@@ -1,4 +1,4 @@
-import 'package:investing/constants.dart';
+import 'package:investing/src/constants.dart';
 import '../get_data.dart';
 
 Future<dynamic> getSingleQuote({required String code}) async {
