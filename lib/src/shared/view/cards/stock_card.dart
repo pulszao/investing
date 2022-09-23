@@ -48,12 +48,24 @@ class StockCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  'R\$ $total',
-                  style: kBaseTextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      'R\$ $total',
+                      style: kBaseTextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '($profit%)',
+                      style: kBaseTextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: profit > 0 ? Colors.greenAccent : Colors.redAccent,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -66,7 +78,7 @@ class StockCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Peso${sectorPage == true ? ' (no setor):' : ':'}'),
-                      Text('$weight%'),
+                      Text('${(weight * 100).toStringAsFixed(2)}%'),
                     ],
                   ),
                   const SizedBox(height: 3),
