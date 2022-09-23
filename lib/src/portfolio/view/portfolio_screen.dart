@@ -71,7 +71,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
     for (Map? item in stocks) {
       Map? stock = item![item.keys.first];
-      print(stock);
+
       if (stock!['total'] != 0 && item.keys.first != 'total') {
         stocksWidgets.add(
           StockCard(

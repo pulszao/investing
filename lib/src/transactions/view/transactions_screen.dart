@@ -128,8 +128,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     List<TransactionCard> stocksWidgets = [];
     List transactions = await UserSecureStorage.getTransactions();
 
-    print(transactions);
-
     for (Map? item in transactions) {
       Map? data = item![item.keys.first];
       stocksWidgets.add(
