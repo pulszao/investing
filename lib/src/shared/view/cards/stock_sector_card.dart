@@ -33,7 +33,7 @@ class StockSectorCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '$sectorPercent%',
+                '${(sectorPercent * 100).toStringAsFixed(2)}%',
                 style: kBaseTextStyle(
                   fontSize: 21.0,
                   fontWeight: FontWeight.w500,

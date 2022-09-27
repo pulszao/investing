@@ -41,12 +41,22 @@ class StockCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  stock,
-                  style: kBaseTextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      stock,
+                      style: kBaseTextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      stockDescription,
+                      overflow: TextOverflow.ellipsis,
+                      style: kBaseTextStyle(),
+                    ),
+                  ],
                 ),
                 Row(
                   children: [

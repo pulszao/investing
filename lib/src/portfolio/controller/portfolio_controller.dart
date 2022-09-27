@@ -62,3 +62,38 @@ Future<List<Map?>> getStocks() async {
 
   return stocks;
 }
+
+Future<List<Map?>> getSectors() async {
+  List stocks = await getStocks();
+  List<String>? auxSectors = [];
+  List<Map?> sectors = [];
+
+  for (Map? item in stocks) {
+    Map? data = item![item.keys.first];
+
+    if (item.keys.first != 'total' && !auxSectors.contains(data!['sector'])) {
+      auxSectors.add(data['sector']);
+    }
+  }
+
+  for (String sector in auxSectors) {
+    List<Map?> stockInSector = [];
+    Map totals = {};
+    totals['totalizator'] = 0;
+
+    for (Map? item in stocks) {
+      Map? data = item![item.keys.first];
+
+      if (data!['sector'] == sector) {
+        stockInSector.add(item);
+        totals['totalizator'] += data['total'];
+      }
+    }
+    stockInSector.add({'sector_totalizator': totals});
+    sectors.add({sector: stockInSector});
+  }
+
+  sectors.add({'totalizator': stocks[stocks.length - 1]!['total']});
+
+  return sectors;
+}
