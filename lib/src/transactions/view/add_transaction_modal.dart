@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/model/stocks_sector_model.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
 import 'package:investing/src/shared/view/buttons/small_button.dart';
@@ -397,6 +398,8 @@ class AddTransactionModal extends StatelessWidget {
                                   Provider.of<TransactionProvider>(context, listen: false).setBuyDate(null);
                                   // success/error modal
                                   displayConfirmationModal(success: true);
+                                  // rebuild home screen charts
+                                  Provider.of<MenuProvider>(context, listen: false).setRebuild(true);
                                 } catch (e) {
                                   // print(e);
                                   // success/error modal

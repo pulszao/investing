@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:investing/src/login/controller/login_controller.dart';
 import 'package:investing/src/login/view/login_screen.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/src/watchlist/controller/watchlist_controller.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +15,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => TransactionProvider()),
         ChangeNotifierProvider(create: (_) => WatchlistProvider()),
+        ChangeNotifierProvider(create: (_) => MenuProvider()),
       ],
       child: const Investing(),
     ),

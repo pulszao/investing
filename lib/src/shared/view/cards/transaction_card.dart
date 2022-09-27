@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:provider/provider.dart';
@@ -72,6 +73,9 @@ class TransactionCard extends StatelessWidget {
 
               // update transactions
               Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
+              // rebuild home screen charts
+              Provider.of<MenuProvider>(context, listen: false).setRebuild(true);
+              // pop modal
               Navigator.pop(context);
 
               await UserSecureStorage.setTransactions(updatedTransactions);
