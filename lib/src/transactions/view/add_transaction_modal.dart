@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/model/stocks_sector_model.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
 import 'package:investing/src/shared/view/buttons/small_button.dart';
@@ -331,19 +332,19 @@ class AddTransactionModal extends StatelessWidget {
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Valor: R\$ ${price.toStringAsFixed(2)}'),
+                                      Text('Valor: R\$ ${NumberFormatter(number: price).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Quantidade: ${quantity.toStringAsFixed(2)}'),
+                                      Text('Quantidade: ${NumberFormatter(number: quantity).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Taxa: R\$ ${fees.toStringAsFixed(2)}'),
+                                      Text('Taxa: R\$ ${NumberFormatter(number: fees).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),

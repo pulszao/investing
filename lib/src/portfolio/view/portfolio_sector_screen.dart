@@ -75,11 +75,13 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
                     sectorPage: true,
                     stock: data.keys.first,
                     stockDescription: stock['company_name'],
-                    nowPrice: 17, //TODO: get now price
+                    nowPrice: 17,
+                    //TODO: get now price
                     avgPrice: stock['buy_price'],
                     quantity: stock['shares'].toInt(),
                     total: stock['total'],
-                    profit: -5.2, //TODO: get profit
+                    profit: -5.2,
+                    //TODO: get now price
                     weight: stock['total'] / sectorTotalizator,
                   ),
                 ),

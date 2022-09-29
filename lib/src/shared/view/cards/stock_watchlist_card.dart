@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
 
 import '../../../constants.dart';
@@ -71,13 +72,13 @@ class StockWatchlistCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'R\$${nowPrice.toStringAsFixed(2)}',
+                        'R\$ ${NumberFormatter(number: nowPrice).formatNumber()}',
                         style: kBaseTextStyle(
                           fontSize: 17,
                         ),
                       ),
                       Text(
-                        '${dailyChange.toStringAsFixed(2)}%',
+                        '${NumberFormatter(number: dailyChange).formatNumber()}%',
                         style: kBaseTextStyle(
                           fontSize: 17,
                           color: dailyChange > 0 ? Colors.greenAccent : Colors.redAccent,

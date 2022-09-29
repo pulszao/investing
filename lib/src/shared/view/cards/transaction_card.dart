@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:provider/provider.dart';
@@ -145,7 +146,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Quantidade:'),
-                        Text('$quantity'),
+                        Text(NumberFormatter(number: quantity, decimalPlaces: 5).formatNumber()),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -153,7 +154,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Taxa: '),
-                        Text('R\$ $fees'),
+                        Text('R\$ ${NumberFormatter(number: fees).formatNumber()}'),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -161,7 +162,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Preço de ${operation == Operation.buy ? 'Compra:' : 'Venda:'} '),
-                        Text('R\$ $buyPrice'),
+                        Text('R\$ ${NumberFormatter(number: buyPrice).formatNumber()}'),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -169,7 +170,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Preço + Taxa: '),
-                        Text('R\$ ${double.parse((fees / quantity + buyPrice).toStringAsFixed(2))}'),
+                        Text('R\$ ${NumberFormatter(number: (fees / quantity + buyPrice)).formatNumber()}'),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -177,7 +178,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Total: '),
-                        Text('R\$ ${double.parse((fees + quantity * buyPrice).toStringAsFixed(2))}'),
+                        Text('R\$ ${NumberFormatter(number: (fees + quantity * buyPrice)).formatNumber()}'),
                       ],
                     ),
                   ],

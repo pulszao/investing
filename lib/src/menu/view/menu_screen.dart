@@ -6,6 +6,7 @@ import 'package:investing/src/portfolio/view/portfolio_sector_screen.dart';
 import 'package:investing/src/profile/view/profile_screen.dart';
 import 'package:investing/src/rentability/view/rentability_screen.dart';
 import 'package:investing/src/shared/model/chart_data_model.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/view/cards/menu_card.dart';
 import 'package:investing/src/transactions/view/transactions_screen.dart';
 import 'package:investing/src/watchlist/view/watchlist_screen.dart';
@@ -159,7 +160,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'IBOVESPA:',
+                            'S&P500:',
                             style: kBaseTextStyle(
                               fontSize: 18,
                             ),
@@ -177,7 +178,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'PORTFOLIO:',
+                            'Portfolio:',
                             style: kBaseTextStyle(
                               fontSize: 18,
                             ),
@@ -218,9 +219,9 @@ class _MenuScreenState extends State<MenuScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Patrimônio: R\$ $total',
+                                  'Personal Value: R\$ ${NumberFormatter(number: total).formatNumber()}',
                                   style: kBaseTextStyle(
-                                    fontSize: 18,
+                                    fontSize: 17,
                                   ),
                                 ),
                               ],
@@ -228,7 +229,19 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                           portfolioChartData.isNotEmpty
                               ? SfCircularChart(
-                                  tooltipBehavior: TooltipBehavior(enable: true),
+                                  tooltipBehavior: TooltipBehavior(
+                                      enable: true,
+                                      builder: (data, point, series, pointIndex, seriesIndex) {
+                                        return Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Text(
+                                            '${data.description}: R\$${NumberFormatter(number: data.totalValue).formatNumber()}',
+                                            style: kBaseTextStyle(
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        );
+                                      }),
                                   series: <CircularSeries>[
                                     DoughnutSeries<ChartData, String>(
                                       dataSource: portfolioChartData,
@@ -302,7 +315,20 @@ class _MenuScreenState extends State<MenuScreen> {
                           ),
                           sectorChartData.isNotEmpty
                               ? SfCircularChart(
-                                  tooltipBehavior: TooltipBehavior(enable: true),
+                                  tooltipBehavior: TooltipBehavior(
+                                    enable: true,
+                                    builder: (data, point, series, pointIndex, seriesIndex) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Text(
+                                          '${data.description}: R\$${NumberFormatter(number: data.totalValue).formatNumber()}',
+                                          style: kBaseTextStyle(
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                   series: <CircularSeries>[
                                     DoughnutSeries<ChartData, String>(
                                       dataSource: sectorChartData,
@@ -313,6 +339,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       ),
                                       selectionBehavior: SelectionBehavior(
                                         enable: true,
+                                        toggleSelection: true,
                                       ),
                                       dataLabelMapper: (ChartData data, _) => data.description,
                                       pointColorMapper: (ChartData data, _) => data.color,

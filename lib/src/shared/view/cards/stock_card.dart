@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 
 class StockCard extends StatelessWidget {
   final bool sectorPage;
@@ -41,27 +42,17 @@ class StockCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      stock,
-                      style: kBaseTextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      stockDescription,
-                      overflow: TextOverflow.ellipsis,
-                      style: kBaseTextStyle(),
-                    ),
-                  ],
+                Text(
+                  stock,
+                  style: kBaseTextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Row(
                   children: [
                     Text(
-                      'R\$ $total',
+                      'R\$ ${NumberFormatter(number: total).formatNumber()}',
                       style: kBaseTextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -79,6 +70,16 @@ class StockCard extends StatelessWidget {
                 ),
               ],
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  stockDescription,
+                  overflow: TextOverflow.ellipsis,
+                  style: kBaseTextStyle(),
+                ),
+              ],
+            ),
             const Divider(thickness: 1),
             SizedBox(
               width: MediaQuery.of(context).size.width / 1.5,
@@ -88,7 +89,7 @@ class StockCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('Peso${sectorPage == true ? ' (no setor):' : ':'}'),
-                      Text('${(weight * 100).toStringAsFixed(2)}%'),
+                      Text('${NumberFormatter(number: weight * 100).formatNumber()}%'),
                     ],
                   ),
                   const SizedBox(height: 3),
@@ -104,7 +105,7 @@ class StockCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Preço médio: '),
-                      Text('R\$ $avgPrice'),
+                      Text('R\$ ${NumberFormatter(number: avgPrice).formatNumber()}'),
                     ],
                   ),
                   const SizedBox(height: 3),
@@ -112,7 +113,7 @@ class StockCard extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Preço atual: '),
-                      Text('R\$ $nowPrice'),
+                      Text('R\$ ${NumberFormatter(number: nowPrice).formatNumber()}'),
                     ],
                   ),
                   const SizedBox(height: 3),
@@ -121,7 +122,7 @@ class StockCard extends StatelessWidget {
                     children: [
                       const Text('Rentabilidade: '),
                       Text(
-                        '$profit%',
+                        '${NumberFormatter(number: profit).formatNumber()}%',
                         style: kBaseTextStyle(
                           color: profit > 0 ? Colors.greenAccent : Colors.redAccent,
                         ),

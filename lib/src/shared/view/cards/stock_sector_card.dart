@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 
 import '../../../constants.dart';
 
@@ -33,7 +34,7 @@ class StockSectorCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${(sectorPercent * 100).toStringAsFixed(2)}%',
+                '${NumberFormatter(number: sectorPercent * 100).formatNumber()}%',
                 style: kBaseTextStyle(
                   fontSize: 21.0,
                   fontWeight: FontWeight.w500,
