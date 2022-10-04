@@ -46,7 +46,7 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
                   size: 50,
                   color: kColorScheme.primary,
                 ),
-                label: 'Adicione transações para ver seu portfolio.',
+                label: 'Add transactions to see your portfolio.',
               ),
       ),
     );

@@ -52,7 +52,7 @@ class StockCard extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'R\$ ${NumberFormatter(number: total).formatNumber()}',
+                      NumberFormatter(number: total).formatNumber(),
                       style: kBaseTextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
@@ -60,7 +60,7 @@ class StockCard extends StatelessWidget {
                     ),
                     const SizedBox(width: 5),
                     Text(
-                      '($profit%)',
+                      '(${NumberFormatter(number: profit, coinName: '').formatNumber()}%)',
                       style: kBaseTextStyle(
                         fontWeight: FontWeight.bold,
                         color: profit > 0 ? Colors.greenAccent : Colors.redAccent,
@@ -88,15 +88,15 @@ class StockCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Peso${sectorPage == true ? ' (no setor):' : ':'}'),
-                      Text('${NumberFormatter(number: weight * 100).formatNumber()}%'),
+                      Text('Weight${sectorPage == true ? ' (in the sector):' : ':'}'),
+                      Text('${NumberFormatter(number: weight * 100, coinName: '').formatNumber()}%'),
                     ],
                   ),
                   const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Quantidade:'),
+                      const Text('Quantity:'),
                       Text('$quantity'),
                     ],
                   ),
@@ -104,25 +104,25 @@ class StockCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Preço médio: '),
-                      Text('R\$ ${NumberFormatter(number: avgPrice).formatNumber()}'),
+                      const Text('Average price: '),
+                      Text(NumberFormatter(number: avgPrice).formatNumber()),
                     ],
                   ),
                   const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Preço atual: '),
-                      Text('R\$ ${NumberFormatter(number: nowPrice).formatNumber()}'),
+                      const Text('Current price: '),
+                      Text(NumberFormatter(number: nowPrice).formatNumber()),
                     ],
                   ),
                   const SizedBox(height: 3),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Rentabilidade: '),
+                      const Text('Rentability: '),
                       Text(
-                        '${NumberFormatter(number: profit).formatNumber()}%',
+                        '${NumberFormatter(number: profit, coinName: '').formatNumber()}%',
                         style: kBaseTextStyle(
                           color: profit > 0 ? Colors.greenAccent : Colors.redAccent,
                         ),

@@ -85,7 +85,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: const [
-                                Text('Perfil'),
+                                Text('Profile'),
                                 SizedBox(width: 5),
                                 Icon(
                                   Icons.arrow_forward,
@@ -109,7 +109,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: MenuCardWidget(
                       screenWidth: MediaQuery.of(context).size.width,
                       itemModel: CardItemModel(
-                        description: 'Rentabilidade',
+                        description: 'Rentability',
                         iconData: MdiIcons.finance,
                         onPressed: () => Navigator.push(
                           context,
@@ -123,7 +123,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: MenuCardWidget(
                       screenWidth: MediaQuery.of(context).size.width,
                       itemModel: CardItemModel(
-                        description: 'Transações',
+                        description: 'Transactions',
                         iconData: MdiIcons.swapHorizontal,
                         onPressed: () => Navigator.push(
                           context,
@@ -219,7 +219,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  'Personal Value: R\$ ${NumberFormatter(number: total).formatNumber()}',
+                                  'Asset Value: ${NumberFormatter(number: total).formatNumber()}',
                                   style: kBaseTextStyle(
                                     fontSize: 17,
                                   ),
@@ -235,7 +235,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                         return Padding(
                                           padding: const EdgeInsets.all(5.0),
                                           child: Text(
-                                            '${data.description}: R\$${NumberFormatter(number: data.totalValue).formatNumber()}',
+                                            '${data.description}: ${NumberFormatter(number: data.totalValue).formatNumber()}',
                                             style: kBaseTextStyle(
                                               color: Colors.black,
                                             ),
@@ -307,7 +307,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
                             child: Text(
-                              'Alocação por Setor',
+                              'Allocation by Sector',
                               style: kBaseTextStyle(
                                 fontSize: 26,
                               ),
@@ -321,7 +321,7 @@ class _MenuScreenState extends State<MenuScreen> {
                                       return Padding(
                                         padding: const EdgeInsets.all(5.0),
                                         child: Text(
-                                          '${data.description}: R\$${NumberFormatter(number: data.totalValue).formatNumber()}',
+                                          '${data.description}: ${NumberFormatter(number: data.totalValue).formatNumber()}',
                                           style: kBaseTextStyle(
                                             color: Colors.black,
                                           ),
@@ -393,7 +393,7 @@ class _MenuScreenState extends State<MenuScreen> {
     double total;
     List<Map?> stocks = await getStocks();
     List<ChartData> portfolioChartData = getPortfolioChartData(stocks);
-    total = stocks.last!['total']['total'];
+    total = stocks.last!['total']['total'].toDouble();
 
     if (!mounted) return;
     Provider.of<MenuProvider>(context, listen: false).setPortfolioData(portfolioChartData);

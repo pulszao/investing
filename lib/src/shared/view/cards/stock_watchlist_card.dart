@@ -27,9 +27,9 @@ class StockWatchlistCard extends StatelessWidget {
         showDialog(
           context: context,
           builder: (_) => StandardModal(
-            label: 'Excluir item',
-            body: 'Tem certeza que você deseja remover $stockSymbol de sua watchlist?',
-            confirmButtonLabel: 'Remover',
+            label: 'Delete item',
+            body: 'Are you sure you want to delete $stockSymbol  from your watchlist?',
+            confirmButtonLabel: 'Delete',
             confirmButtonFunction: removeStock,
           ),
         );
@@ -72,13 +72,13 @@ class StockWatchlistCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'R\$ ${NumberFormatter(number: nowPrice).formatNumber()}',
+                        NumberFormatter(number: nowPrice).formatNumber(),
                         style: kBaseTextStyle(
                           fontSize: 17,
                         ),
                       ),
                       Text(
-                        '${NumberFormatter(number: dailyChange).formatNumber()}%',
+                        '${NumberFormatter(number: dailyChange, coinName: '').formatNumber()}%',
                         style: kBaseTextStyle(
                           fontSize: 17,
                           color: dailyChange > 0 ? Colors.greenAccent : Colors.redAccent,

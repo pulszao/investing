@@ -66,7 +66,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                         size: 50,
                         color: kColorScheme.primary,
                       ),
-                      label: 'Nenhuma transação adicionada.',
+                      label: 'You have no transactions.',
                     ),
             ),
             Column(
@@ -79,7 +79,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SmallButton(
-                        text: 'Adicionar',
+                        text: 'Add',
                         backgroundColor: kColorScheme.surface,
                         onPressed: () => showModalBottomSheet<void>(
                           context: context,
@@ -97,7 +97,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                       ),
                       const SizedBox(width: 30),
                       SmallButton(
-                        text: 'Filtrar',
+                        text: 'Filter',
                         backgroundColor: kColorScheme.surface,
                         onPressed: () => showModalBottomSheet<void>(
                           context: context,

@@ -58,7 +58,7 @@ class AddTransactionModal extends StatelessWidget {
       // display modal
       showScaffoldModal(
         context: context,
-        message: success ? "Transação adicionada com sucesso." : "Erro ao adicionar transação.",
+        message: success ? "Transaction successfully added." : "Error! Transaction could not be added.",
         duration: 2,
         backgroundColor: success ? kSuccessColor : kColorScheme.error,
       );
@@ -84,14 +84,14 @@ class AddTransactionModal extends StatelessWidget {
                         SmallButton(
                           width: itemWidth,
                           onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.buy),
-                          text: 'Compra',
+                          text: 'Buy',
                           backgroundColor: operation == Operation.buy ? kColorScheme.primary : kColorScheme.surface,
                         ),
                         const SizedBox(width: 8),
                         SmallButton(
                           width: itemWidth,
                           onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.sell),
-                          text: 'Venda',
+                          text: 'Sell',
                           backgroundColor: operation == Operation.sell ? kColorScheme.primary : kColorScheme.surface,
                         ),
                       ],
@@ -105,11 +105,11 @@ class AddTransactionModal extends StatelessWidget {
                           height: 70,
                           child: TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Ativo',
+                              labelText: 'Stock',
                             ),
                             validator: (stock) {
                               if (stock == null || stock.trim() == '') {
-                                return 'Ação inválida.';
+                                return 'Invalid stock.';
                               }
                               return null;
                             },
@@ -149,7 +149,7 @@ class AddTransactionModal extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Data',
+                                      'Date',
                                       style: kBaseTextStyle(
                                         fontSize: 13,
                                         color: Colors.grey.shade400,
@@ -172,7 +172,7 @@ class AddTransactionModal extends StatelessWidget {
                                     SizedBox(height: buyDate == null ? 8 : 10),
                                     buyDate == null
                                         ? Text(
-                                            'Selecione uma data.',
+                                            'Select a date.',
                                             style: kBaseTextStyle(
                                               fontSize: 12,
                                               color: kColorScheme.error,
@@ -200,12 +200,12 @@ class AddTransactionModal extends StatelessWidget {
                           height: 50,
                           child: TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Valor do Ativo',
+                              labelText: 'Stock price',
                             ),
                             keyboardType: TextInputType.number,
                             validator: (price) {
                               if (price == null || price.trim() == '') {
-                                return 'Preço inválido.';
+                                return 'Invalid price.';
                               }
                               return null;
                             },
@@ -222,12 +222,12 @@ class AddTransactionModal extends StatelessWidget {
                           height: 50,
                           child: TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Quantidade',
+                              labelText: 'Quantity',
                             ),
                             keyboardType: TextInputType.number,
                             validator: (quantity) {
                               if (quantity == null || quantity.trim() == '') {
-                                return 'Quantidade inválida.';
+                                return 'Invalid quantity.';
                               }
                               return null;
                             },
@@ -265,12 +265,12 @@ class AddTransactionModal extends StatelessWidget {
                             ),
                             dropdownDecoratorProps: const DropDownDecoratorProps(
                               dropdownSearchDecoration: InputDecoration(
-                                labelText: 'Setor',
+                                labelText: 'Sector',
                               ),
                             ),
                             validator: (sector) {
                               if (sector == null) {
-                                return 'Setor inválido.';
+                                return 'Invalid sector.';
                               }
                               return null;
                             },
@@ -284,12 +284,12 @@ class AddTransactionModal extends StatelessWidget {
                           width: itemWidth,
                           child: TextFormField(
                             decoration: const InputDecoration(
-                              labelText: 'Taxa',
+                              labelText: 'Fee',
                             ),
                             keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.trim() == '') {
-                                return 'Valor inválido.';
+                                return 'Invalid value.';
                               }
                               return null;
                             },
@@ -309,16 +309,16 @@ class AddTransactionModal extends StatelessWidget {
                           showDialog(
                             context: context,
                             builder: (_) => StandardModal(
-                              label: 'Adicionar item',
-                              body: 'Você deseja adicionar $stock à suas transações?',
-                              confirmButtonLabel: 'Confirmar',
+                              label: 'Add item',
+                              body: 'Add $stock to yours transactions?',
+                              confirmButtonLabel: 'Confirm',
                               bodyWidget: Column(
                                 children: [
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
                                       Text(
-                                        'Ativo: $stock (${operation.name})',
+                                        'Stock: $stock (${operation.name})',
                                         style: kBaseTextStyle(fontSize: 20),
                                       ),
                                     ],
@@ -326,31 +326,31 @@ class AddTransactionModal extends StatelessWidget {
                                   const SizedBox(height: 8),
                                   Row(
                                     children: [
-                                      Text('Data: ${DateFormat('dd/MM/yyyy').format(buyDate)}'),
+                                      Text('Date: ${DateFormat('dd/MM/yyyy').format(buyDate)}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Valor: R\$ ${NumberFormatter(number: price).formatNumber()}'),
+                                      Text('Price: ${NumberFormatter(number: price).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Quantidade: ${NumberFormatter(number: quantity).formatNumber()}'),
+                                      Text('Quantity: ${NumberFormatter(number: quantity).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Taxa: R\$ ${NumberFormatter(number: fees).formatNumber()}'),
+                                      Text('Fees: ${NumberFormatter(number: fees).formatNumber()}'),
                                     ],
                                   ),
                                   const SizedBox(height: 5),
                                   Row(
                                     children: [
-                                      Text('Setor: ${sector!.sector}'),
+                                      Text('Sector: ${sector!.sector}'),
                                     ],
                                   ),
                                 ],
@@ -366,6 +366,8 @@ class AddTransactionModal extends StatelessWidget {
 
                                   // get transaction index
                                   int index = await UserSecureStorage.getTransactionIndex();
+
+                                  print(index);
 
                                   // save new transaction
                                   await UserSecureStorage.addTransaction({
@@ -411,7 +413,7 @@ class AddTransactionModal extends StatelessWidget {
                           );
                         }
                       },
-                      text: 'Confirmar',
+                      text: 'Confirm',
                       backgroundColor: kColorScheme.surface,
                     ),
                   ],

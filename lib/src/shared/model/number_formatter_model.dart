@@ -11,6 +11,9 @@ class NumberFormatter {
   /// thousand string separator
   final String thousandSeparator;
 
+  /// thousand string separator
+  final String coinName;
+
   /// number of decimal places
   final int decimalPlaces;
 
@@ -22,6 +25,7 @@ class NumberFormatter {
     this.separator = '.',
     this.decimalSeparator = ',',
     this.thousandSeparator = '.',
+    this.coinName = '\$',
     this.decimalPlaces = 2,
     this.displayDecimal = true,
   });
@@ -56,6 +60,6 @@ class NumberFormatter {
       hole = '$hole$decimalSeparator$decimalNumbers';
     }
 
-    return hole;
+    return '$coinName $hole';
   }
 }

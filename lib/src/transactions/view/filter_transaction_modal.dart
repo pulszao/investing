@@ -50,14 +50,14 @@ class FilterTransactionModal extends StatelessWidget {
                       SmallButton(
                         width: itemWidth,
                         onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.buy),
-                        text: 'Compra',
+                        text: 'Buy',
                         backgroundColor: operation == Operation.buy ? kColorScheme.primary : kColorScheme.surface,
                       ),
                       const SizedBox(width: 8),
                       SmallButton(
                         width: itemWidth,
                         onPressed: () => Provider.of<TransactionProvider>(context, listen: false).setOperation(Operation.sell),
-                        text: 'Venda',
+                        text: 'Sell',
                         backgroundColor: operation == Operation.sell ? kColorScheme.primary : kColorScheme.surface,
                       ),
                     ],
@@ -87,7 +87,7 @@ class FilterTransactionModal extends StatelessWidget {
                           ),
                           dropdownDecoratorProps: const DropDownDecoratorProps(
                             dropdownSearchDecoration: InputDecoration(
-                              labelText: 'Ativo',
+                              labelText: 'Stock',
                             ),
                           ),
                           onChanged: (values) {},
@@ -122,7 +122,7 @@ class FilterTransactionModal extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Data início',
+                                    'Initial date',
                                     style: kBaseTextStyle(
                                       fontSize: 13,
                                       color: Colors.grey.shade400,
@@ -157,7 +157,7 @@ class FilterTransactionModal extends StatelessWidget {
                   const SizedBox(height: 8),
                   Button(
                     onPressed: () {},
-                    text: 'Filtrar',
+                    text: 'Filter',
                     backgroundColor: kColorScheme.surface,
                   ),
                 ],

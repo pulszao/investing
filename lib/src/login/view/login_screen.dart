@@ -60,7 +60,7 @@ class LoginScreen extends StatelessWidget {
                         TextFormField(
                           enableSuggestions: false,
                           decoration: const InputDecoration(
-                            label: Text('Usuário'),
+                            label: Text('Username'),
                             focusedBorder: UnderlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(4)),
                               borderSide: BorderSide(width: 4, color: Colors.blue),
@@ -74,7 +74,7 @@ class LoginScreen extends StatelessWidget {
                           validator: (username) {
                             String? username = Provider.of<LoginProvider>(context, listen: false).getUsername();
                             if (username == null) {
-                              return 'Insira sua senha.';
+                              return 'Enter your username.';
                             }
                             return null;
                           },
@@ -85,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                           enableSuggestions: false,
                           autocorrect: false,
                           decoration: const InputDecoration(
-                            label: Text('Senha'),
+                            label: Text('Password'),
                             focusedBorder: UnderlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(4)),
                               borderSide: BorderSide(width: 4, color: Colors.blue),
@@ -99,7 +99,7 @@ class LoginScreen extends StatelessWidget {
                           validator: (password) {
                             String? password = Provider.of<LoginProvider>(context, listen: false).getPassword();
                             if (password == null) {
-                              return 'Insira sua senha.';
+                              return 'Enter your password.';
                             }
                             return null;
                           },
@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                             }
                           },
                           width: 300,
-                          text: 'Entrar',
+                          text: 'Login',
                           elevation: 0,
                           backgroundColor: kColorScheme.primary,
                           textColor: Colors.white,
@@ -124,7 +124,7 @@ class LoginScreen extends StatelessWidget {
                         Button(
                           onPressed: () {},
                           width: 300,
-                          text: 'Registrar-se',
+                          text: 'Register',
                           elevation: 0,
                           backgroundColor: kColorScheme.onPrimary,
                           textColor: kColorScheme.primary,

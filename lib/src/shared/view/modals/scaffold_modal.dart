@@ -10,6 +10,7 @@ ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showScaffoldModal({
 }) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
+      dismissDirection: DismissDirection.down,
       behavior: SnackBarBehavior.floating,
       duration: Duration(seconds: duration),
       backgroundColor: backgroundColor ?? kColorScheme.error,

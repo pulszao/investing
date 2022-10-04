@@ -87,7 +87,7 @@ class _StandardModalState extends State<StandardModal> with SingleTickerProvider
                       onPressed: () {
                         Navigator.of(context).pop();
                       },
-                      child: const Text('Cancelar'),
+                      child: const Text('Cancel'),
                     ),
               widget.displayConfirmationButton == false
                   ? const SizedBox()

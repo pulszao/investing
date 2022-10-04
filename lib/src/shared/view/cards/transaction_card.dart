@@ -40,9 +40,9 @@ class TransactionCard extends StatelessWidget {
         showDialog(
           context: context,
           builder: (_) => StandardModal(
-            label: 'Excluir item',
-            body: 'Tem certeza que você deseja remover $stockSymbol (${DateFormat('dd/MM/yyyy').format(buyDate)}) de suas transações?',
-            confirmButtonLabel: 'Remover',
+            label: 'Delete transaction',
+            body: 'Are you sure you want to delete $stockSymbol (${DateFormat('dd/MM/yyyy').format(buyDate)}) from your trasactions?',
+            confirmButtonLabel: 'Delete',
             confirmButtonFunction: () async {
               List updatedTransactions = [];
               List<TransactionCard> stocksWidgets = [];
@@ -119,7 +119,7 @@ class TransactionCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        operation == Operation.buy ? 'Compra' : 'Venda',
+                        operation == Operation.buy ? 'Buy' : 'Sell',
                         style: kBaseTextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -145,32 +145,32 @@ class TransactionCard extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Quantidade:'),
-                        Text(NumberFormatter(number: quantity, decimalPlaces: 5).formatNumber()),
+                        const Text('Quantity:'),
+                        Text(NumberFormatter(number: quantity, decimalPlaces: 5, coinName: '').formatNumber()),
                       ],
                     ),
                     const SizedBox(height: 3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Taxa: '),
-                        Text('R\$ ${NumberFormatter(number: fees).formatNumber()}'),
+                        const Text('Fees: '),
+                        Text(NumberFormatter(number: fees).formatNumber()),
                       ],
                     ),
                     const SizedBox(height: 3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Preço de ${operation == Operation.buy ? 'Compra:' : 'Venda:'} '),
-                        Text('R\$ ${NumberFormatter(number: buyPrice).formatNumber()}'),
+                        Text('${operation == Operation.buy ? 'Buy' : 'Sell'} price:'),
+                        Text(NumberFormatter(number: buyPrice).formatNumber()),
                       ],
                     ),
                     const SizedBox(height: 3),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Preço + Taxa: '),
-                        Text('R\$ ${NumberFormatter(number: (fees / quantity + buyPrice)).formatNumber()}'),
+                        const Text('Price + Fees: '),
+                        Text(NumberFormatter(number: (fees / quantity + buyPrice)).formatNumber()),
                       ],
                     ),
                     const SizedBox(height: 3),
@@ -178,7 +178,7 @@ class TransactionCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text('Total: '),
-                        Text('R\$ ${NumberFormatter(number: (fees + quantity * buyPrice)).formatNumber()}'),
+                        Text(NumberFormatter(number: (fees + quantity * buyPrice)).formatNumber()),
                       ],
                     ),
                   ],

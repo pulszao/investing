@@ -34,7 +34,7 @@ class StockSectorCard extends StatelessWidget {
                 ),
               ),
               Text(
-                '${NumberFormatter(number: sectorPercent * 100).formatNumber()}%',
+                '${NumberFormatter(number: sectorPercent * 100, coinName: '').formatNumber()}%',
                 style: kBaseTextStyle(
                   fontSize: 21.0,
                   fontWeight: FontWeight.w500,

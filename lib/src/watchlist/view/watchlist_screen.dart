@@ -62,7 +62,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
                           )
                         : notFound(
                             height: 0,
-                            label: 'Nenhuma ação adicionada à watchlist.',
+                            label: 'You have none stock added to your watchlist.',
                           ),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -87,7 +87,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
                                       controller: stockFormController,
                                       validator: (stock) {
                                         if (stock != null && stock.trim() == '') {
-                                          return 'Ação inválida.';
+                                          return 'Invalid stock.';
                                         }
                                         return null;
                                       },
@@ -194,7 +194,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
         // error scaffold modal
         showScaffoldModal(
           context: context,
-          message: "'$stock' já está em sua watchlist.",
+          message: "'$stock' already is in your watchlist.",
           duration: 3,
         );
       }

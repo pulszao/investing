@@ -52,7 +52,9 @@ class UserSecureStorage {
 
   static Future<int> getTransactionIndex() async {
     String data = await _storage.read(key: _transactionIndex) ?? '';
+
     if (data == '') {
+      await setTransactionIndex(1);
       return 0;
     } else {
       int index = int.parse(data);

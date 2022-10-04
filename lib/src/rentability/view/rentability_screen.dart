@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 
 import '../../constants.dart';
 
@@ -21,27 +22,28 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Patrimônio',
+                          'Asset Value',
                           style: kBaseTextStyle(
                             fontSize: 18,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          'R\$ 10.543,23',
+                          NumberFormatter(number: 10543.23).formatNumber(),
                           style: kBaseTextStyle(
                             fontSize: 32,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          'Inicial: R\$10.000,00',
+                          'Initial asset: ${NumberFormatter(number: 10000).formatNumber()}',
                         ),
                       ],
                     ),
@@ -49,7 +51,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          'Rentabilidade',
+                          'Rentability',
                           style: kBaseTextStyle(
                             fontSize: 18,
                           ),
@@ -59,13 +61,13 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                           children: [
                             const Icon(
                               Icons.arrow_upward,
-                              size: 24,
+                              size: 22,
                               color: Colors.greenAccent,
                             ),
                             Text(
                               '5,43%',
                               style: kBaseTextStyle(
-                                fontSize: 32,
+                                fontSize: 28,
                                 color: Colors.greenAccent,
                               ),
                             ),
@@ -80,7 +82,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Melhores Ações',
+                      'Top Stock Gainers',
                       style: kBaseTextStyle(
                         fontSize: 22,
                       ),
@@ -117,7 +119,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Piores Ações',
+                      'Top Stock Losers',
                       style: kBaseTextStyle(
                         fontSize: 22,
                       ),
@@ -220,7 +222,7 @@ class TopPickStock extends StatelessWidget {
                 Container(
                   constraints: BoxConstraints(maxWidth: width / 2.5),
                   child: Text(
-                    'R\$ $total',
+                    '$total',
                     style: kBaseTextStyle(
                       fontSize: 16,
                     ),
