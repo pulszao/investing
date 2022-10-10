@@ -8,44 +8,50 @@ import 'package:provider/provider.dart';
 
 import '../controller/login_controller.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final loginKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     String? version = Provider.of<LoginProvider>(context, listen: false).getVersion();
-    final loginKey = GlobalKey<FormState>();
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'v$version',
-                      textAlign: TextAlign.center,
-                      style: kBaseTextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
+      child: Scaffold(
+        body: Stack(
+          children: [
+            SafeArea(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'v$version',
+                        textAlign: TextAlign.center,
+                        style: kBaseTextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: Platform.isAndroid ? 10 : 0),
-              ],
+                    ],
+                  ),
+                  SizedBox(height: Platform.isAndroid ? 10 : 0),
+                ],
+              ),
             ),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              child: GestureDetector(
-                onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
+            Center(
+              child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 50),
                   child: Form(
@@ -60,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                         TextFormField(
                           enableSuggestions: false,
                           decoration: const InputDecoration(
-                            label: Text('Username'),
+                            label: Text('Usename'),
                             focusedBorder: UnderlineInputBorder(
                               borderRadius: BorderRadius.all(Radius.circular(4)),
                               borderSide: BorderSide(width: 4, color: Colors.blue),
@@ -74,7 +80,7 @@ class LoginScreen extends StatelessWidget {
                           validator: (username) {
                             String? username = Provider.of<LoginProvider>(context, listen: false).getUsername();
                             if (username == null) {
-                              return 'Enter your username.';
+                              return 'Insira sua senha.';
                             }
                             return null;
                           },
@@ -99,7 +105,7 @@ class LoginScreen extends StatelessWidget {
                           validator: (password) {
                             String? password = Provider.of<LoginProvider>(context, listen: false).getPassword();
                             if (password == null) {
-                              return 'Enter your password.';
+                              return 'Insira sua senha.';
                             }
                             return null;
                           },
@@ -138,8 +144,8 @@ class LoginScreen extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

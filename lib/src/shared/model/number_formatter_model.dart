@@ -60,6 +60,6 @@ class NumberFormatter {
       hole = '$hole$decimalSeparator$decimalNumbers';
     }
 
-    return '$coinName $hole';
+    return '${coinName != '' ? '$coinName ' : ''}$hole';
   }
 }

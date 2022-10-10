@@ -20,8 +20,14 @@ import 'dart:io' show Platform;
 
 import '../../constants.dart';
 
-class AddTransactionModal extends StatelessWidget {
-  AddTransactionModal({Key? key}) : super(key: key);
+class AddTransactionModal extends StatefulWidget {
+  const AddTransactionModal({Key? key}) : super(key: key);
+
+  @override
+  State<AddTransactionModal> createState() => _AddTransactionModalState();
+}
+
+class _AddTransactionModalState extends State<AddTransactionModal> {
   final _transactionKey = GlobalKey<FormState>();
 
   @override

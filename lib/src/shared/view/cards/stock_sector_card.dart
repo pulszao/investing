@@ -26,18 +26,25 @@ class StockSectorCard extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                sector,
-                style: kBaseTextStyle(
-                  fontSize: 24.0,
-                  fontWeight: FontWeight.w500,
+              Container(
+                constraints: BoxConstraints(maxWidth: (MediaQuery.of(context).size.width - 20) * 0.63),
+                child: Text(
+                  sector,
+                  style: kBaseTextStyle(
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
-              Text(
-                '${NumberFormatter(number: sectorPercent * 100, coinName: '').formatNumber()}%',
-                style: kBaseTextStyle(
-                  fontSize: 21.0,
-                  fontWeight: FontWeight.w500,
+              Container(
+                constraints: const BoxConstraints(maxWidth: 73),
+                child: Text(
+                  '${NumberFormatter(number: sectorPercent * 100, coinName: '').formatNumber()}%',
+                  textAlign: TextAlign.end,
+                  style: kBaseTextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
