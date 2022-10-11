@@ -2,6 +2,11 @@
 
 This app was designed using Flutter 3.0.0
 
+<div>
+  <img height="220em" src="images/app_home.png" />
+  <img height="220em" src="images/app_pages.png" />
+</div>
+
 ## Description
 
 This is a portfolio manager app, where you can search and keep track of your stocks. I believe that it might be helpful for the investors to keep track of their portfolio and performance.
