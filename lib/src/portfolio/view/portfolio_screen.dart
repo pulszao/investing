@@ -67,6 +67,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   void buildStocks() async {
     List<Map?> stocks = await getStocks();
+    Map? stocksQuote = await getStocksQuote();
     List<StockCard> stocksWidgets = [];
 
     for (Map? item in stocks) {
@@ -77,11 +78,11 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
           StockCard(
             stock: item.keys.first,
             stockDescription: stock['company_name'],
-            nowPrice: 0, // TODO: get price
+            nowPrice: stocksQuote![item.keys.first]['now_price'],
             avgPrice: stock['buy_price'],
             quantity: 1000,
             total: stock['total'],
-            profit: -5.2, // TODO: get profit
+            profit: ((stocksQuote[item.keys.first]['now_price'] - stock['buy_price']) / stock['buy_price']) * 100,
             weight: stock['total'] / stocks[stocks.length - 1]!['total']['total'],
           ),
         );

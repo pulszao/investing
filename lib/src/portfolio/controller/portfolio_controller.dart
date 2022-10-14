@@ -1,3 +1,4 @@
+import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/storage/user_secure_storage.dart';
 
@@ -96,4 +97,31 @@ Future<List<Map?>> getSectors() async {
   sectors.add({'totalizator': stocks[stocks.length - 1]!['total']});
 
   return sectors;
+}
+
+Future<Map?> getStocksQuote() async {
+  List transactions = await UserSecureStorage.getTransactions();
+  List<String>? stocks = [];
+  Map? stocksQuotes = {};
+
+  for (Map? item in transactions) {
+    // add stocks to a list
+    stocks.add(item![item.keys.first]['stock']);
+  }
+
+  // get stocks quote
+  if (stocks.isNotEmpty) {
+    Map? quotes = await getMultipleQuote(codes: stocks);
+
+    for (String stock in quotes!.keys) {
+      stocksQuotes[quotes[stock]['quote']['symbol']] = {
+        'stock': quotes[stock]['quote']['symbol'],
+        'company_name': quotes[stock]['quote']['companyName'],
+        'now_price': quotes[stock]['quote']['latestPrice'].toDouble(),
+        'daly_change': (quotes[stock]['quote']['changePercent'] * 100).toDouble(),
+      };
+    }
+  }
+
+  return stocksQuotes;
 }
