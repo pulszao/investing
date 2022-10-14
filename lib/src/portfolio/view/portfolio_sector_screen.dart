@@ -54,6 +54,7 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
 
   void buildSectors() async {
     List<Map?> sectors = await getSectors();
+    Map? stocksQuote = await getStocksQuote();
     List<StockSectorCard> stocksBySector = [];
     double totalizator = sectors.last!['totalizator']['total'].toDouble();
 
@@ -75,13 +76,11 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
                     sectorPage: true,
                     stock: data.keys.first,
                     stockDescription: stock['company_name'],
-                    nowPrice: 17,
-                    //TODO: get now price
+                    nowPrice: stocksQuote![data.keys.first]['now_price'],
                     avgPrice: stock['buy_price'],
                     quantity: stock['shares'].toInt(),
                     total: stock['total'],
-                    profit: -5.2,
-                    //TODO: get now price
+                    profit: ((stocksQuote[data.keys.first]['now_price'] - stock['buy_price']) / stock['buy_price']) * 100,
                     weight: stock['total'] / sectorTotalizator,
                   ),
                 ),
