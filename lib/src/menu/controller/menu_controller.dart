@@ -3,7 +3,6 @@ import 'package:investing/src/shared/model/chart_data_model.dart';
 
 class MenuProvider extends ChangeNotifier {
   bool _rebuild = false;
-  double _total = 0;
   List<ChartData> _portfolioData = [];
   List<ChartData> _portfolioSectorData = [];
 
@@ -14,15 +13,6 @@ class MenuProvider extends ChangeNotifier {
 
   bool getRebuild() {
     return _rebuild;
-  }
-
-  void setTotal(double data) {
-    _total = data;
-    notifyListeners();
-  }
-
-  double getTotal() {
-    return _total;
   }
 
   void setPortfolioSectorData(List<ChartData> data) {

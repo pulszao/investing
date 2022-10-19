@@ -54,7 +54,7 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
 
   void buildSectors() async {
     List<Map?> sectors = await getSectors();
-    Map? stocksQuote = await getStocksQuote();
+    Map? stocksQuote = await getStocksQuote(context);
     List<StockSectorCard> stocksBySector = [];
     double totalizator = sectors.last!['totalizator']['total'].toDouble();
 

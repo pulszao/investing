@@ -21,19 +21,6 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // List<StockCard> stocksWidgets = [
-    //   StockCard(
-    //     stock: 'WEGE3',
-    //     stockDescription: 'WEG S.A',
-    //     nowPrice: 20,
-    //     avgPrice: 20.22,
-    //     quantity: 1000,
-    //     total: 17000,
-    //     profit: -5.2,
-    //     weight: 8,
-    //   ),
-    // ];
-
     return Scaffold(
       body: SafeArea(
         child: stocksWidgets.isNotEmpty
@@ -67,7 +54,7 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
 
   void buildStocks() async {
     List<Map?> stocks = await getStocks();
-    Map? stocksQuote = await getStocksQuote();
+    Map? stocksQuote = await getStocksQuote(context);
     List<StockCard> stocksWidgets = [];
 
     for (Map? item in stocks) {

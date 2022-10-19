@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
+import 'package:investing/src/rentability/controller/rentability_controller.dart';
+import 'package:investing/src/rentability/view/top_pick_stock_card.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants.dart';
 
@@ -11,8 +15,21 @@ class RentabilityScreen extends StatefulWidget {
 }
 
 class _RentabilityScreenState extends State<RentabilityScreen> {
+  double total = 0;
+
+  @override
+  void initState() {
+    getTotals();
+    buildStocks();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    double total = Provider.of<PortfolioProvider>(context).getTotal();
+    double rentability = Provider.of<PortfolioProvider>(context).getRentability();
+    double currentAsset = Provider.of<PortfolioProvider>(context).getCurrentAsset();
+
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,14 +53,14 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          NumberFormatter(number: 10543.23).formatNumber(),
+                          NumberFormatter(number: currentAsset).formatNumber(),
                           style: kBaseTextStyle(
                             fontSize: 32,
                           ),
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          'Initial asset: ${NumberFormatter(number: 10000).formatNumber()}',
+                          'Initial asset: ${NumberFormatter(number: total).formatNumber()}',
                         ),
                       ],
                     ),
@@ -59,16 +76,16 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                         const SizedBox(height: 5),
                         Row(
                           children: [
-                            const Icon(
-                              Icons.arrow_upward,
+                            Icon(
+                              rentabilityIcon(rentability),
                               size: 22,
-                              color: Colors.greenAccent,
+                              color: rentabilityColor(rentability),
                             ),
                             Text(
-                              '5,43%',
+                              '$rentability%',
                               style: kBaseTextStyle(
                                 fontSize: 28,
-                                color: Colors.greenAccent,
+                                color: rentabilityColor(rentability),
                               ),
                             ),
                           ],
@@ -90,22 +107,22 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                     const SizedBox(height: 5),
                     Wrap(
                       children: [
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'EGIE3',
                           total: 7435.20,
                           profit: 5.53,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'WEGE3',
                           total: 2435.20,
                           profit: 23.53,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'ITUB3',
                           total: 21435.20,
                           profit: 13.53,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'ITUB3',
                           total: 21435.20,
                           profit: 13.53,
@@ -127,22 +144,22 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                     const SizedBox(height: 5),
                     Wrap(
                       children: [
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'MGLU3',
                           total: 435.20,
                           profit: -69.51,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'IRBR3',
                           total: 335.20,
                           profit: -59.50,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'AZUL4',
                           total: 1035.20,
                           profit: -45.93,
                         ),
-                        TopPickStock(
+                        TopPickStockCard(
                           stock: 'AZUL4',
                           total: 1035.20,
                           profit: -45.93,
@@ -158,81 +175,15 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
       ),
     );
   }
-}
 
-class TopPickStock extends StatelessWidget {
-  final String stock;
-  final double profit;
-  final double total;
-  const TopPickStock({
-    Key? key,
-    required this.stock,
-    required this.profit,
-    required this.total,
-  }) : super(key: key);
+  void buildStocks() async {
+    getStocksQuote(context);
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    return Card(
-      elevation: 0,
-      color: kColorScheme.surface,
-      margin: const EdgeInsets.all(4),
-      child: Container(
-        padding: const EdgeInsets.all(8.0),
-        width: width / 2 - 20,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                SizedBox(
-                  width: width / 4 - 15,
-                  child: Text(
-                    stock,
-                    style: kBaseTextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                Icon(
-                  profit >= 0 ? Icons.arrow_upward : Icons.arrow_downward,
-                  size: 15,
-                  color: profit >= 0 ? Colors.greenAccent : Colors.redAccent,
-                ),
-                const SizedBox(width: 2),
-                Container(
-                  constraints: BoxConstraints(maxWidth: width / 5),
-                  child: Text(
-                    profit >= 0 ? '$profit%' : '${profit * -1}%',
-                    style: kBaseTextStyle(
-                      fontSize: 15,
-                      color: profit >= 0 ? Colors.greenAccent : Colors.redAccent,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxWidth: width / 2.5),
-                  child: Text(
-                    '$total',
-                    style: kBaseTextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  void getTotals() async {
+    List<Map?> stocks = await getStocks();
+    setState(() {
+      total = stocks.last!['total']['total'].toDouble();
+    });
   }
 }

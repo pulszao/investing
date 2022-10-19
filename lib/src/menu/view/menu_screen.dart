@@ -34,7 +34,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     bool rebuild = Provider.of<MenuProvider>(context).getRebuild();
-    double total = Provider.of<MenuProvider>(context).getTotal();
+    double total = Provider.of<PortfolioProvider>(context).getTotal();
     List<ChartData> portfolioChartData = Provider.of<MenuProvider>(context).getPortfolioData();
     List<ChartData> sectorChartData = Provider.of<MenuProvider>(context).getPortfolioSectorData();
 
@@ -397,7 +397,7 @@ class _MenuScreenState extends State<MenuScreen> {
 
     if (!mounted) return;
     Provider.of<MenuProvider>(context, listen: false).setPortfolioData(portfolioChartData);
-    Provider.of<MenuProvider>(context, listen: false).setTotal(total);
+    Provider.of<PortfolioProvider>(context, listen: false).setTotal(total);
   }
 
   void buildSectorGraph() async {

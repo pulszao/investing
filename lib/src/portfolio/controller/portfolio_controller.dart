@@ -1,6 +1,41 @@
+import 'package:flutter/material.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/storage/user_secure_storage.dart';
+import 'package:provider/provider.dart';
+
+class PortfolioProvider extends ChangeNotifier {
+  double _rentability = 0;
+  double _total = 0;
+  double _currentAsset = 0;
+
+  void setCurrentAsset(double data) {
+    _currentAsset = data;
+    notifyListeners();
+  }
+
+  double getCurrentAsset() {
+    return _currentAsset;
+  }
+
+  void setTotal(double data) {
+    _total = data;
+    notifyListeners();
+  }
+
+  double getTotal() {
+    return _total;
+  }
+
+  void setRentability(double currentAsset) {
+    _rentability = ((currentAsset - _total) / _total) * 100;
+    notifyListeners();
+  }
+
+  double getRentability() {
+    return _rentability;
+  }
+}
 
 Future<List<Map?>> getStocks() async {
   List transactions = await UserSecureStorage.getTransactions();
@@ -99,14 +134,20 @@ Future<List<Map?>> getSectors() async {
   return sectors;
 }
 
-Future<Map?> getStocksQuote() async {
+Future<Map?> getStocksQuote(BuildContext context) async {
   List transactions = await UserSecureStorage.getTransactions();
   List<String>? stocks = [];
+  Map? stocksShares = {};
   Map? stocksQuotes = {};
+  double currentAsset = 0;
 
   for (Map? item in transactions) {
     // add stocks to a list
     stocks.add(item![item.keys.first]['stock']);
+    stocksShares[item[item.keys.first]['stock']] = {
+      'stock': item[item.keys.first]['stock'],
+      'shares': item[item.keys.first]['shares'],
+    };
   }
 
   // get stocks quote
@@ -120,8 +161,12 @@ Future<Map?> getStocksQuote() async {
         'now_price': quotes[stock]['quote']['latestPrice'].toDouble(),
         'daly_change': (quotes[stock]['quote']['changePercent'] * 100).toDouble(),
       };
+      currentAsset += stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble();
     }
   }
+
+  Provider.of<PortfolioProvider>(context, listen: false).setRentability(currentAsset);
+  Provider.of<PortfolioProvider>(context, listen: false).setCurrentAsset(currentAsset);
 
   return stocksQuotes;
 }
