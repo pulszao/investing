@@ -4,6 +4,7 @@ import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/portfolio/view/portfolio_screen.dart';
 import 'package:investing/src/portfolio/view/portfolio_sector_screen.dart';
 import 'package:investing/src/profile/view/profile_screen.dart';
+import 'package:investing/src/rentability/controller/rentability_controller.dart';
 import 'package:investing/src/rentability/view/rentability_screen.dart';
 import 'package:investing/src/shared/model/chart_data_model.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
@@ -34,7 +35,8 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     bool rebuild = Provider.of<MenuProvider>(context).getRebuild();
-    double total = Provider.of<PortfolioProvider>(context).getTotal();
+    double total = Provider.of<PortfolioProvider>(context).getCurrentAsset();
+    double rentability = Provider.of<PortfolioProvider>(context).getRentability();
     List<ChartData> portfolioChartData = Provider.of<MenuProvider>(context).getPortfolioData();
     List<ChartData> sectorChartData = Provider.of<MenuProvider>(context).getPortfolioSectorData();
 
@@ -184,10 +186,10 @@ class _MenuScreenState extends State<MenuScreen> {
                             ),
                           ),
                           Text(
-                            ' +1,23%',
+                            ' ${NumberFormatter(number: rentability, coinName: '').formatNumber()}%',
                             style: kBaseTextStyle(
                               fontSize: 18,
-                              color: Colors.greenAccent,
+                              color: rentabilityColor(rentability),
                             ),
                           ),
                         ],

@@ -82,7 +82,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                               color: rentabilityColor(rentability),
                             ),
                             Text(
-                              '$rentability%',
+                              '${NumberFormatter(number: rentability, coinName: '').formatNumber()}%',
                               style: kBaseTextStyle(
                                 fontSize: 28,
                                 color: rentabilityColor(rentability),
@@ -131,7 +131,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                     )
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 24),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

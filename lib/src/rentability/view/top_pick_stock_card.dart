@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
 import 'package:investing/src/rentability/controller/rentability_controller.dart';
+import 'package:investing/src/shared/model/number_formatter_model.dart';
 
 class TopPickStockCard extends StatelessWidget {
   final String stock;
@@ -48,7 +49,7 @@ class TopPickStockCard extends StatelessWidget {
                 Container(
                   constraints: BoxConstraints(maxWidth: width / 5),
                   child: Text(
-                    profit >= 0 ? '$profit%' : '${profit * -1}%',
+                    '${NumberFormatter(number: profit, coinName: '').formatNumber()}%',
                     style: kBaseTextStyle(
                       fontSize: 15,
                       color: rentabilityColor(profit),
@@ -64,7 +65,7 @@ class TopPickStockCard extends StatelessWidget {
                 Container(
                   constraints: BoxConstraints(maxWidth: width / 2.5),
                   child: Text(
-                    '$total',
+                    NumberFormatter(number: total).formatNumber(),
                     style: kBaseTextStyle(
                       fontSize: 16,
                     ),
