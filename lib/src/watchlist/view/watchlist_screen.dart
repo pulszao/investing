@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/view/cards/stock_watchlist_card.dart';
 import 'package:investing/src/shared/view/modals/loading_modal.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
@@ -207,7 +208,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
     List<StockWatchlistCard> stocksWidgets = [];
 
     if (watchlist!.isNotEmpty) {
-      Map? quotes = await getMultipleQuote(codes: watchlist);
+      Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote();
 
       for (String stock in quotes!.keys) {
         stocksWidgets.add(

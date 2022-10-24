@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/shared/view/cards/stock_card.dart';
+import 'package:provider/provider.dart';
 
 class PortfolioScreen extends StatefulWidget {
   const PortfolioScreen({Key? key}) : super(key: key);
@@ -53,8 +55,8 @@ class _PortfolioScreenState extends State<PortfolioScreen> {
   }
 
   void buildStocks() async {
+    Map? stocksQuote = Provider.of<MenuProvider>(context, listen: false).getStocksQuote();
     List<Map?> stocks = await getStocks();
-    Map? stocksQuote = await getStocksQuote(context);
     List<StockCard> stocksWidgets = [];
 
     for (Map? item in stocks) {

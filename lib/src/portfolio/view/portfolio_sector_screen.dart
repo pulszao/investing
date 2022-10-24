@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/shared/view/cards/stock_sector_card.dart';
 import 'package:investing/src/shared/view/cards/stock_card.dart';
+import 'package:provider/provider.dart';
 
 class PortfolioSectorScreen extends StatefulWidget {
   const PortfolioSectorScreen({Key? key}) : super(key: key);
@@ -53,8 +55,8 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
   }
 
   void buildSectors() async {
+    Map? stocksQuote = Provider.of<MenuProvider>(context, listen: false).getStocksQuote();
     List<Map?> sectors = await getSectors();
-    Map? stocksQuote = await getStocksQuote(context);
     List<StockSectorCard> stocksBySector = [];
     double totalizator = sectors.last!['totalizator']['total'].toDouble();
 

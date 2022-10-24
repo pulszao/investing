@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
@@ -27,6 +28,7 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
+    setDataTimer();
     buildPortfolioGraph();
     buildSectorGraph();
     super.initState();
@@ -408,5 +410,14 @@ class _MenuScreenState extends State<MenuScreen> {
 
     if (!mounted) return;
     Provider.of<MenuProvider>(context, listen: false).setPortfolioSectorData(portfolioChartData);
+  }
+
+  void setDataTimer() async {
+    // get data for all parts of app
+    fetchStocksData(context);
+    fetchWatchlistData(context);
+    const oneSec = Duration(minutes: 1);
+    Timer.periodic(oneSec, (Timer t) => fetchStocksData(context));
+    Timer.periodic(oneSec, (Timer t) => fetchWatchlistData(context));
   }
 }

@@ -20,7 +20,6 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
   @override
   void initState() {
     getTotals();
-    buildStocks();
     super.initState();
   }
 
@@ -174,10 +173,6 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
         ),
       ),
     );
-  }
-
-  void buildStocks() async {
-    getStocksQuote(context);
   }
 
   void getTotals() async {
