@@ -7,10 +7,20 @@ import 'package:provider/provider.dart';
 
 class MenuProvider extends ChangeNotifier {
   bool _rebuild = false;
+  double _sep500 = 0;
   Map? _stocksQuote = {};
   Map? _stocksWatchlistQuote = {};
   List<ChartData> _portfolioData = [];
   List<ChartData> _portfolioSectorData = [];
+
+  void setSep500(double data) {
+    _sep500 = data;
+    notifyListeners();
+  }
+
+  double getSep500() {
+    return _sep500;
+  }
 
   void setWatchlistQuote(Map? data) {
     _stocksWatchlistQuote = data;
@@ -108,5 +118,13 @@ void fetchWatchlistData(BuildContext context) async {
   if (watchlist != null) {
     Map? quotes = await getMultipleQuote(codes: watchlist);
     Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(quotes);
+  }
+}
+
+void fetchSep500Quote(BuildContext context) async {
+  Map? sep500 = await getSingleQuote(code: 'SPY'); // ETF that represents S&P500
+
+  if (sep500 != null) {
+    Provider.of<MenuProvider>(context, listen: false).setSep500(sep500['changePercent'] * 100);
   }
 }

@@ -8,6 +8,7 @@ class PortfolioProvider extends ChangeNotifier {
   double _rentability = 0;
   double _total = 0;
   double _currentAsset = 0;
+  double _portfolioDailyChange = 0;
 
   void setCurrentAsset(double data) {
     _currentAsset = data;
@@ -34,6 +35,15 @@ class PortfolioProvider extends ChangeNotifier {
 
   double getRentability() {
     return _rentability;
+  }
+
+  void setPortfolioDailyChange(double data) {
+    _portfolioDailyChange = data;
+    notifyListeners();
+  }
+
+  double getPortfolioDailyChange() {
+    return _portfolioDailyChange;
   }
 }
 
@@ -140,6 +150,8 @@ Future<Map?> getStocksQuote(BuildContext context) async {
   Map? stocksShares = {};
   Map? stocksQuotes = {};
   double currentAsset = 0;
+  double weight = 0;
+  double dailyChange = 0;
 
   for (Map? item in transactions) {
     // add stocks to a list
@@ -163,10 +175,17 @@ Future<Map?> getStocksQuote(BuildContext context) async {
       };
       currentAsset += stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble();
     }
+
+    // get daily change
+    for (String stock in quotes.keys) {
+      weight += (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
+      dailyChange += (quotes[stock]['quote']['changePercent'] * 100).toDouble();
+    }
   }
 
   Provider.of<PortfolioProvider>(context, listen: false).setRentability(currentAsset);
   Provider.of<PortfolioProvider>(context, listen: false).setCurrentAsset(currentAsset);
+  Provider.of<PortfolioProvider>(context, listen: false).setPortfolioDailyChange(weight / dailyChange);
 
   return stocksQuotes;
 }

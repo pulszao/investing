@@ -14,6 +14,7 @@ import 'package:investing/src/transactions/view/transactions_screen.dart';
 import 'package:investing/src/watchlist/view/watchlist_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../constants.dart';
@@ -31,6 +32,7 @@ class _MenuScreenState extends State<MenuScreen> {
     setDataTimer();
     buildPortfolioGraph();
     buildSectorGraph();
+    fetchSep500Quote(context);
     super.initState();
   }
 
@@ -38,7 +40,8 @@ class _MenuScreenState extends State<MenuScreen> {
   Widget build(BuildContext context) {
     bool rebuild = Provider.of<MenuProvider>(context).getRebuild();
     double total = Provider.of<PortfolioProvider>(context).getCurrentAsset();
-    double rentability = Provider.of<PortfolioProvider>(context).getRentability();
+    double sep500 = Provider.of<MenuProvider>(context).getSep500();
+    double portfolioDailyChange = Provider.of<PortfolioProvider>(context, listen: false).getPortfolioDailyChange();
     List<ChartData> portfolioChartData = Provider.of<MenuProvider>(context).getPortfolioData();
     List<ChartData> sectorChartData = Provider.of<MenuProvider>(context).getPortfolioSectorData();
 
@@ -169,11 +172,17 @@ class _MenuScreenState extends State<MenuScreen> {
                               fontSize: 18,
                             ),
                           ),
-                          Text(
-                            ' +0,72%',
-                            style: kBaseTextStyle(
-                              fontSize: 18,
-                              color: Colors.greenAccent,
+                          Shimmer.fromColors(
+                            baseColor: rentabilityColor(sep500),
+                            highlightColor: Colors.grey.shade300,
+                            period: const Duration(seconds: 3),
+                            child: Text(
+                              ' ${NumberFormatter(number: sep500, coinName: '').formatNumber()}%',
+                              textAlign: TextAlign.center,
+                              style: kBaseTextStyle(
+                                fontSize: 18,
+                                color: rentabilityColor(sep500),
+                              ),
                             ),
                           ),
                         ],
@@ -187,11 +196,16 @@ class _MenuScreenState extends State<MenuScreen> {
                               fontSize: 18,
                             ),
                           ),
-                          Text(
-                            ' ${NumberFormatter(number: rentability, coinName: '').formatNumber()}%',
-                            style: kBaseTextStyle(
-                              fontSize: 18,
-                              color: rentabilityColor(rentability),
+                          Shimmer.fromColors(
+                            baseColor: rentabilityColor(portfolioDailyChange),
+                            highlightColor: Colors.grey.shade300,
+                            period: const Duration(seconds: 3),
+                            child: Text(
+                              ' ${NumberFormatter(number: portfolioDailyChange, coinName: '').formatNumber()}%',
+                              style: kBaseTextStyle(
+                                fontSize: 18,
+                                color: rentabilityColor(portfolioDailyChange),
+                              ),
                             ),
                           ),
                         ],
