@@ -151,6 +151,7 @@ Future<Map?> getStocksQuote(BuildContext context) async {
   Map? stocksQuotes = {};
   double currentAsset = 0;
   double weight = 0;
+  double totalWeight = 0;
   double dailyChange = 0;
 
   for (Map? item in transactions) {
@@ -178,14 +179,15 @@ Future<Map?> getStocksQuote(BuildContext context) async {
 
     // get daily change
     for (String stock in quotes.keys) {
-      weight += (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
-      dailyChange += (quotes[stock]['quote']['changePercent'] * 100).toDouble();
+      totalWeight += (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
+      weight = (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
+      dailyChange += (quotes[stock]['quote']['changePercent'] * 100).toDouble() * weight;
     }
   }
 
   Provider.of<PortfolioProvider>(context, listen: false).setRentability(currentAsset);
   Provider.of<PortfolioProvider>(context, listen: false).setCurrentAsset(currentAsset);
-  Provider.of<PortfolioProvider>(context, listen: false).setPortfolioDailyChange(weight / dailyChange);
+  Provider.of<PortfolioProvider>(context, listen: false).setPortfolioDailyChange(dailyChange / totalWeight);
 
   return stocksQuotes;
 }
