@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:investing/src/rentability/controller/rentability_controller.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../constants.dart';
 
@@ -77,11 +79,17 @@ class StockWatchlistCard extends StatelessWidget {
                           fontSize: 17,
                         ),
                       ),
-                      Text(
-                        '${NumberFormatter(number: dailyChange, coinName: '').formatNumber()}%',
-                        style: kBaseTextStyle(
-                          fontSize: 17,
-                          color: dailyChange > 0 ? Colors.greenAccent : Colors.redAccent,
+                      Shimmer.fromColors(
+                        baseColor: rentabilityColor(dailyChange),
+                        highlightColor: Colors.grey.shade300,
+                        period: const Duration(seconds: 3),
+                        child: Text(
+                          '${NumberFormatter(number: dailyChange, coinName: '').formatNumber()}%',
+                          textAlign: TextAlign.center,
+                          style: kBaseTextStyle(
+                            fontSize: 17,
+                            color: rentabilityColor(dailyChange),
+                          ),
                         ),
                       ),
                     ],

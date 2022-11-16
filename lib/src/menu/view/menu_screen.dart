@@ -160,53 +160,65 @@ class _MenuScreenState extends State<MenuScreen> {
                 color: kColorScheme.surface,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'S&P500:',
-                            style: kBaseTextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          Shimmer.fromColors(
-                            baseColor: rentabilityColor(sep500),
-                            highlightColor: Colors.grey.shade300,
-                            period: const Duration(seconds: 3),
-                            child: Text(
-                              ' ${NumberFormatter(number: sep500, coinName: '').formatNumber()}%',
-                              textAlign: TextAlign.center,
-                              style: kBaseTextStyle(
-                                fontSize: 18,
-                                color: rentabilityColor(sep500),
-                              ),
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Daily Performance',
+                        style: kBaseTextStyle(
+                          fontSize: 18,
+                        ),
                       ),
+                      const SizedBox(height: 10),
                       Row(
-                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Portfolio:',
-                            style: kBaseTextStyle(
-                              fontSize: 18,
-                            ),
-                          ),
-                          Shimmer.fromColors(
-                            baseColor: rentabilityColor(portfolioDailyChange),
-                            highlightColor: Colors.grey.shade300,
-                            period: const Duration(seconds: 3),
-                            child: Text(
-                              ' ${NumberFormatter(number: portfolioDailyChange, coinName: '').formatNumber()}%',
-                              style: kBaseTextStyle(
-                                fontSize: 18,
-                                color: rentabilityColor(portfolioDailyChange),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'S&P500:',
+                                style: kBaseTextStyle(
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
+                              Shimmer.fromColors(
+                                baseColor: rentabilityColor(sep500),
+                                highlightColor: Colors.grey.shade300,
+                                period: const Duration(seconds: 3),
+                                child: Text(
+                                  ' ${NumberFormatter(number: sep500, coinName: '').formatNumber()}%',
+                                  textAlign: TextAlign.center,
+                                  style: kBaseTextStyle(
+                                    fontSize: 18,
+                                    color: rentabilityColor(sep500),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Portfolio:',
+                                style: kBaseTextStyle(
+                                  fontSize: 18,
+                                ),
+                              ),
+                              Shimmer.fromColors(
+                                baseColor: rentabilityColor(portfolioDailyChange),
+                                highlightColor: Colors.grey.shade300,
+                                period: const Duration(seconds: 3),
+                                child: Text(
+                                  ' ${NumberFormatter(number: portfolioDailyChange, coinName: '').formatNumber()}%',
+                                  style: kBaseTextStyle(
+                                    fontSize: 18,
+                                    color: rentabilityColor(portfolioDailyChange),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

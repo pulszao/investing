@@ -4,6 +4,7 @@ import 'package:investing/src/rentability/controller/rentability_controller.dart
 import 'package:investing/src/rentability/view/top_pick_stock_card.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../constants.dart';
 
@@ -80,11 +81,16 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                               size: 22,
                               color: rentabilityColor(rentability),
                             ),
-                            Text(
-                              '${NumberFormatter(number: rentability, coinName: '').formatNumber()}%',
-                              style: kBaseTextStyle(
-                                fontSize: 28,
-                                color: rentabilityColor(rentability),
+                            Shimmer.fromColors(
+                              baseColor: rentabilityColor(rentability),
+                              highlightColor: Colors.grey.shade300,
+                              period: const Duration(seconds: 3),
+                              child: Text(
+                                '${NumberFormatter(number: rentability, coinName: '').formatNumber()}%',
+                                style: kBaseTextStyle(
+                                  fontSize: 28,
+                                  color: rentabilityColor(rentability),
+                                ),
                               ),
                             ),
                           ],
