@@ -41,7 +41,7 @@ class _MenuScreenState extends State<MenuScreen> {
     bool rebuild = Provider.of<MenuProvider>(context).getRebuild();
     double total = Provider.of<PortfolioProvider>(context).getCurrentAsset();
     double sep500 = Provider.of<MenuProvider>(context).getSep500();
-    double portfolioDailyChange = Provider.of<PortfolioProvider>(context, listen: false).getPortfolioDailyChange();
+    double portfolioDailyChange = Provider.of<PortfolioProvider>(context).getPortfolioDailyChange();
     List<ChartData> portfolioChartData = Provider.of<MenuProvider>(context).getPortfolioData();
     List<ChartData> sectorChartData = Provider.of<MenuProvider>(context).getPortfolioSectorData();
 
@@ -166,10 +166,10 @@ class _MenuScreenState extends State<MenuScreen> {
                       Text(
                         'Daily Performance',
                         style: kBaseTextStyle(
-                          fontSize: 18,
+                          fontSize: 17,
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

@@ -21,6 +21,7 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
   @override
   void initState() {
     getTotals();
+    getTopStocks(context);
     super.initState();
   }
 
@@ -29,6 +30,8 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
     double total = Provider.of<PortfolioProvider>(context).getTotal();
     double rentability = Provider.of<PortfolioProvider>(context).getRentability();
     double currentAsset = Provider.of<PortfolioProvider>(context).getCurrentAsset();
+    List<TopPickStockCard> topStocksGainers = Provider.of<PortfolioProvider>(context).getTopStocksGainers();
+    List<TopPickStockCard> topStocksLosers = Provider.of<PortfolioProvider>(context).getTopStocksLosers();
 
     return Scaffold(
       body: SafeArea(
@@ -111,28 +114,23 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                     ),
                     const SizedBox(height: 5),
                     Wrap(
-                      children: [
-                        TopPickStockCard(
-                          stock: 'EGIE3',
-                          total: 7435.20,
-                          profit: 5.53,
-                        ),
-                        TopPickStockCard(
-                          stock: 'WEGE3',
-                          total: 2435.20,
-                          profit: 23.53,
-                        ),
-                        TopPickStockCard(
-                          stock: 'ITUB3',
-                          total: 21435.20,
-                          profit: 13.53,
-                        ),
-                        TopPickStockCard(
-                          stock: 'ITUB3',
-                          total: 21435.20,
-                          profit: 13.53,
-                        ),
-                      ],
+                      children: topStocksGainers.isNotEmpty
+                          ? topStocksGainers
+                          : [
+                              Card(
+                                color: kColorScheme.surface,
+                                child: Container(
+                                  padding: const EdgeInsets.all(12.0),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "You don't have stocks profiting!",
+                                    style: kBaseTextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                     )
                   ],
                 ),
@@ -148,28 +146,23 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
                     ),
                     const SizedBox(height: 5),
                     Wrap(
-                      children: [
-                        TopPickStockCard(
-                          stock: 'MGLU3',
-                          total: 435.20,
-                          profit: -69.51,
-                        ),
-                        TopPickStockCard(
-                          stock: 'IRBR3',
-                          total: 335.20,
-                          profit: -59.50,
-                        ),
-                        TopPickStockCard(
-                          stock: 'AZUL4',
-                          total: 1035.20,
-                          profit: -45.93,
-                        ),
-                        TopPickStockCard(
-                          stock: 'AZUL4',
-                          total: 1035.20,
-                          profit: -45.93,
-                        ),
-                      ],
+                      children: topStocksLosers.isNotEmpty
+                          ? topStocksLosers
+                          : [
+                              Card(
+                                color: kColorScheme.surface,
+                                child: Container(
+                                  padding: const EdgeInsets.all(12.0),
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Text(
+                                    "Wow! You don't have any losers on your portfolio!",
+                                    style: kBaseTextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
                     )
                   ],
                 )

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
+import 'package:investing/src/menu/controller/menu_controller.dart';
+import 'package:investing/src/rentability/view/top_pick_stock_card.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/storage/user_secure_storage.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +11,26 @@ class PortfolioProvider extends ChangeNotifier {
   double _total = 0;
   double _currentAsset = 0;
   double _portfolioDailyChange = 0;
+  List<TopPickStockCard> _topStocksGainers = [];
+  List<TopPickStockCard> _topStocksLosers = [];
+
+  void setTopStocksLosers(List<TopPickStockCard> data) {
+    _topStocksLosers = data;
+    notifyListeners();
+  }
+
+  List<TopPickStockCard> getTopStocksLosers() {
+    return _topStocksLosers;
+  }
+
+  void setTopStocksGainers(List<TopPickStockCard> data) {
+    _topStocksGainers = data;
+    notifyListeners();
+  }
+
+  List<TopPickStockCard> getTopStocksGainers() {
+    return _topStocksGainers;
+  }
 
   void setCurrentAsset(double data) {
     _currentAsset = data;
@@ -151,7 +173,6 @@ Future<Map?> getStocksQuote(BuildContext context) async {
   Map? stocksQuotes = {};
   double currentAsset = 0;
   double weight = 0;
-  double totalWeight = 0;
   double dailyChange = 0;
 
   for (Map? item in transactions) {
@@ -166,28 +187,97 @@ Future<Map?> getStocksQuote(BuildContext context) async {
   // get stocks quote
   if (stocks.isNotEmpty) {
     Map? quotes = await getMultipleQuote(codes: stocks);
+    double changePercent = 0;
 
     for (String stock in quotes!.keys) {
+      changePercent = quotes[stock]['quote']['changePercent'] ??
+          (quotes[stock]['quote']['latestPrice'] - quotes[stock]['quote']['previousClose']) / (quotes[stock]['quote']['previousClose']);
+
       stocksQuotes[quotes[stock]['quote']['symbol']] = {
         'stock': quotes[stock]['quote']['symbol'],
         'company_name': quotes[stock]['quote']['companyName'],
         'now_price': quotes[stock]['quote']['latestPrice'].toDouble(),
-        'daly_change': (quotes[stock]['quote']['changePercent'] * 100).toDouble(),
+        'daily_change': changePercent.toDouble() * 100,
       };
       currentAsset += stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble();
     }
 
     // get daily change
     for (String stock in quotes.keys) {
-      totalWeight += (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
+      changePercent = quotes[stock]['quote']['changePercent'] ??
+          (quotes[stock]['quote']['latestPrice'] - quotes[stock]['quote']['previousClose']) / (quotes[stock]['quote']['previousClose']);
+
       weight = (stocksShares[stock]['shares'] * quotes[stock]['quote']['latestPrice'].toDouble()) / currentAsset;
-      dailyChange += (quotes[stock]['quote']['changePercent'] * 100).toDouble() * weight;
+      dailyChange += changePercent.toDouble() * 100 * weight;
     }
   }
 
   Provider.of<PortfolioProvider>(context, listen: false).setRentability(currentAsset);
   Provider.of<PortfolioProvider>(context, listen: false).setCurrentAsset(currentAsset);
-  Provider.of<PortfolioProvider>(context, listen: false).setPortfolioDailyChange(dailyChange / totalWeight);
+  Provider.of<PortfolioProvider>(context, listen: false).setPortfolioDailyChange(dailyChange);
 
   return stocksQuotes;
+}
+
+void getTopStocks(BuildContext context) async {
+  Map? stocksQuote = Provider.of<MenuProvider>(context, listen: false).getStocksQuote();
+  List<Map?> stocks = await getStocks();
+  stocks.removeAt(stocks.length - 1); // removing total map
+  List<Map?> topStocks = [];
+  List<Map?> worstStocks = [];
+  List<TopPickStockCard> topStocksWidgets = [];
+  List<TopPickStockCard> worstStocksWidgets = [];
+  double profit = 0;
+
+  // order stocks by profitability
+  stocks.sort((s1, s2) {
+    Map? stock1 = s1![s1.keys.first];
+    Map? stock2 = s2![s2.keys.first];
+
+    double profit1 = ((stocksQuote![s1.keys.first]['now_price'] - stock1!['buy_price']) / stock1['buy_price']) * 100;
+    double profit2 = ((stocksQuote[s2.keys.first]['now_price'] - stock2!['buy_price']) / stock2['buy_price']) * 100;
+
+    var r = profit1.compareTo(profit2);
+    if (r != 0) return r;
+    return profit1.compareTo(profit2);
+  });
+
+  for (Map? item in stocks) {
+    Map? stock = item![item.keys.first];
+
+    profit = ((stocksQuote![item.keys.first]['now_price'] - stock!['buy_price']) / stock['buy_price']) * 100;
+    stock['stock'] = item.keys.first;
+    stock['current_value'] = stocksQuote[item.keys.first]['now_price'] * stock['shares'];
+
+    if (profit > 0 && worstStocks.length <= 4) {
+      topStocks.add(stock);
+    } else if (profit < 0 && worstStocks.length <= 4) {
+      worstStocks.add(stock);
+    }
+  }
+
+  for (Map? stock in topStocks) {
+    profit = ((stocksQuote![stock!['stock']]['now_price'] - stock['buy_price']) / stock['buy_price']) * 100;
+    topStocksWidgets.add(
+      TopPickStockCard(
+        stock: stock['stock'],
+        total: stock['current_value'],
+        profit: profit,
+      ),
+    );
+  }
+
+  for (Map? stock in worstStocks) {
+    profit = ((stocksQuote![stock!['stock']]['now_price'] - stock['buy_price']) / stock['buy_price']) * 100;
+    worstStocksWidgets.add(
+      TopPickStockCard(
+        stock: stock['stock'],
+        total: stock['current_value'],
+        profit: profit,
+      ),
+    );
+  }
+
+  Provider.of<PortfolioProvider>(context, listen: false).setTopStocksGainers(topStocksWidgets);
+  Provider.of<PortfolioProvider>(context, listen: false).setTopStocksLosers(worstStocksWidgets);
 }

@@ -98,42 +98,48 @@ class TransactionCard extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        stockSymbol,
-                        style: kBaseTextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.60,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          stockSymbol,
+                          style: kBaseTextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        stockDescription,
-                        overflow: TextOverflow.ellipsis,
-                        style: kBaseTextStyle(),
-                      ),
-                    ],
+                        Text(
+                          stockDescription,
+                          overflow: TextOverflow.ellipsis,
+                          style: kBaseTextStyle(),
+                        ),
+                      ],
+                    ),
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        operation == Operation.buy ? 'Buy' : 'Sell',
-                        style: kBaseTextStyle(
-                          fontSize: 13,
-                          fontWeight: FontWeight.bold,
-                          color: operation == Operation.buy ? kSuccessColor : kColorScheme.error,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.27,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          operation == Operation.buy ? 'Buy' : 'Sell',
+                          style: kBaseTextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: operation == Operation.buy ? kSuccessColor : kColorScheme.error,
+                          ),
                         ),
-                      ),
-                      Text(
-                        DateFormat('dd/MM/yyyy').format(buyDate),
-                        style: kBaseTextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        Text(
+                          DateFormat('dd/MM/yyyy').format(buyDate),
+                          style: kBaseTextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

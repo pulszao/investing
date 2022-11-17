@@ -316,7 +316,7 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                             context: context,
                             builder: (_) => StandardModal(
                               label: 'Add item',
-                              body: 'Add $stock to yours transactions?',
+                              body: 'Add $stock to your transactions?',
                               confirmButtonLabel: 'Confirm',
                               bodyWidget: Column(
                                 children: [
@@ -362,6 +362,9 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                                 ],
                               ),
                               confirmButtonFunction: () async {
+                                // update data for all parts of app
+                                fetchStocksData(context);
+
                                 try {
                                   // pop confirmation modal
                                   Navigator.pop(context);
@@ -372,8 +375,6 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
 
                                   // get transaction index
                                   int index = await UserSecureStorage.getTransactionIndex();
-
-                                  print(index);
 
                                   // save new transaction
                                   await UserSecureStorage.addTransaction({

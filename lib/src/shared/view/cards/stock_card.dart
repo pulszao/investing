@@ -73,10 +73,13 @@ class StockCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  stockDescription,
-                  overflow: TextOverflow.ellipsis,
-                  style: kBaseTextStyle(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: Text(
+                    stockDescription,
+                    overflow: TextOverflow.ellipsis,
+                    style: kBaseTextStyle(),
+                  ),
                 ),
               ],
             ),
