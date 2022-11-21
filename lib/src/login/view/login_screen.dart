@@ -2,9 +2,12 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
+import 'package:investing/src/login/view/registration_screen.dart';
 import 'package:investing/src/menu/view/menu_screen.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
+import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../controller/login_controller.dart';
 
@@ -21,6 +24,14 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     String? version = Provider.of<LoginProvider>(context, listen: false).getVersion();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseAuth.instance.idTokenChanges().listen((User? user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
@@ -58,10 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     key: loginKey,
                     child: Column(
                       children: [
-                        const Image(
-                          image: AssetImage('images/candlestick-chart.png'),
-                          height: 130.0,
-                        ),
+                        loginLogoImage,
                         const SizedBox(height: 15),
                         TextFormField(
                           enableSuggestions: false,
@@ -78,8 +86,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           onChanged: (username) => Provider.of<LoginProvider>(context, listen: false).setUsername(username),
                           validator: (username) {
-                            String? username = Provider.of<LoginProvider>(context, listen: false).getUsername();
-                            if (username == null) {
+                            String username = Provider.of<LoginProvider>(context, listen: false).getUsername();
+                            if (username == '') {
                               return 'Insira sua senha.';
                             }
                             return null;
@@ -103,8 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.text,
                           onChanged: (password) => Provider.of<LoginProvider>(context, listen: false).setPassword(password),
                           validator: (password) {
-                            String? password = Provider.of<LoginProvider>(context, listen: false).getPassword();
-                            if (password == null) {
+                            String password = Provider.of<LoginProvider>(context, listen: false).getPassword();
+                            if (password == '') {
                               return 'Insira sua senha.';
                             }
                             return null;
@@ -112,13 +120,48 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 20),
                         Button(
-                          onPressed: () {
+                          onPressed: () async {
                             if (loginKey.currentState!.validate()) {
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(builder: (BuildContext context) => const MenuScreen()),
-                                (Route<dynamic> route) => false,
+                              // register user
+                              int authentication = await authenticateUser(
+                                email: Provider.of<LoginProvider>(context, listen: false).getUsername(),
+                                password: Provider.of<LoginProvider>(context, listen: false).getPassword(),
                               );
+                              if (!mounted) return;
+
+                              if (authentication == 0) {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (BuildContext context) => const MenuScreen()),
+                                  (Route<dynamic> route) => false,
+                                );
+                              } else if (authentication == 1) {
+                                // error scaffold modal
+                                showScaffoldModal(
+                                  context: context,
+                                  message: "Wrong password.",
+                                  duration: 2,
+                                );
+                              } else if (authentication == 2) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (BuildContext context) => const RegistrationScreen()),
+                                );
+                                // error scaffold modal
+                                showScaffoldModal(
+                                  backgroundColor: kWarningColor,
+                                  context: context,
+                                  message: "Username not registered yet!",
+                                  duration: 2,
+                                );
+                              } else {
+                                // error scaffold modal
+                                showScaffoldModal(
+                                  context: context,
+                                  message: "We had a problem on your login, try again.",
+                                  duration: 2,
+                                );
+                              }
                             }
                           },
                           width: 300,
@@ -128,7 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           textColor: Colors.white,
                         ),
                         Button(
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (BuildContext context) => const RegistrationScreen()),
+                          ),
                           width: 300,
                           text: 'Register',
                           elevation: 0,

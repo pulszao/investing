@@ -88,3 +88,11 @@ Widget notFound({double? height = 200, double? width = 390, required String labe
     ),
   );
 }
+
+Widget loginLogoImage = const Hero(
+  tag: 'logo_image',
+  child: Image(
+    image: AssetImage('images/candlestick-chart.png'),
+    height: 130.0,
+  ),
+);
