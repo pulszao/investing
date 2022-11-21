@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "702758401668",
+    "project_id": "investing-446bc",
+    "storage_bucket": "investing-446bc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:702758401668:android:e88ef7807c5f40f21734d1",
+        "android_client_info": {
+          "package_name": "com.pulszao.investing"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "702758401668-o4vvfrj9qbhu005793ab9j4cuhd404if.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmNay4SVGNpJdxso3KcjJpnw1yhC0aMMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "702758401668-o4vvfrj9qbhu005793ab9j4cuhd404if.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
