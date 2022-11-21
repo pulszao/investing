@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:investing/src/login/controller/login_controller.dart';
@@ -9,7 +10,12 @@ import 'package:investing/src/watchlist/controller/watchlist_controller.dart';
 import 'package:provider/provider.dart';
 import 'src/constants.dart';
 
-void main() {
+void main() async {
+  // initialize Binding
+  WidgetsFlutterBinding.ensureInitialized();
+  // initialize firebase
+  await Firebase.initializeApp();
+
   runApp(
     MultiProvider(
       providers: [
