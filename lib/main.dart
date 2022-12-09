@@ -5,6 +5,7 @@ import 'package:investing/src/login/controller/login_controller.dart';
 import 'package:investing/src/login/view/login_screen.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
+import 'package:investing/src/profile/controller/profile_controller.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/src/watchlist/controller/watchlist_controller.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => WatchlistProvider()),
         ChangeNotifierProvider(create: (_) => MenuProvider()),
         ChangeNotifierProvider(create: (_) => PortfolioProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: const Investing(),
     ),

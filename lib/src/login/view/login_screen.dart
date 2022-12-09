@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
 import 'package:investing/src/login/view/registration_screen.dart';
 import 'package:investing/src/menu/view/menu_screen.dart';
+import 'package:investing/src/profile/controller/profile_controller.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:provider/provider.dart';
@@ -24,12 +25,18 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     String? version = Provider.of<LoginProvider>(context, listen: false).getVersion();
-    FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseAuth.instance.idTokenChanges().listen((User? user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
+      if (user != null) {
+        String? username = user.displayName ?? user.email;
+        Provider.of<ProfileProvider>(context, listen: false).setInitials(username);
+        Provider.of<ProfileProvider>(context, listen: false).setDisplayName(username);
+        Provider.of<ProfileProvider>(context, listen: false).setEmail(user.email);
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (BuildContext context) => const MenuScreen()),
+          (Route<dynamic> route) => false,
+        );
       }
     });
 

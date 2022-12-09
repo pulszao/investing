@@ -36,8 +36,7 @@ class LoginProvider extends ChangeNotifier {
 
 Future<int> registerUser({required String email, required String password}) async {
   try {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(email: "barry.allen@example.com", password: "SuperSecretPassword!");
+    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
     return 0;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
@@ -56,8 +55,7 @@ Future<int> registerUser({required String email, required String password}) asyn
 
 Future<int> authenticateUser({required String email, required String password}) async {
   try {
-    UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(email: "barry.allen@example.com", password: "SuperSecretPassword!");
+    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
     return 0;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {

@@ -4,6 +4,7 @@ import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/portfolio/view/portfolio_screen.dart';
 import 'package:investing/src/portfolio/view/portfolio_sector_screen.dart';
+import 'package:investing/src/profile/controller/profile_controller.dart';
 import 'package:investing/src/profile/view/profile_screen.dart';
 import 'package:investing/src/rentability/controller/rentability_controller.dart';
 import 'package:investing/src/rentability/view/rentability_screen.dart';
@@ -44,6 +45,8 @@ class _MenuScreenState extends State<MenuScreen> {
     double portfolioDailyChange = Provider.of<PortfolioProvider>(context).getPortfolioDailyChange();
     List<ChartData> portfolioChartData = Provider.of<MenuProvider>(context).getPortfolioData();
     List<ChartData> sectorChartData = Provider.of<MenuProvider>(context).getPortfolioSectorData();
+    String? username = Provider.of<ProfileProvider>(context).getDisplayName();
+    String? initials = Provider.of<ProfileProvider>(context).getInitials();
 
     if (rebuild) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -66,7 +69,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Lucas Canale Pulsz',
+                        username ?? 'user',
                         style: kBaseTextStyle(fontSize: 24),
                       ),
                       GestureDetector(
@@ -80,7 +83,7 @@ class _MenuScreenState extends State<MenuScreen> {
                               backgroundColor: kColorScheme.primary.withOpacity(0.4),
                               radius: 26,
                               child: Text(
-                                'LP',
+                                initials ?? '',
                                 style: kBaseTextStyle(
                                   fontSize: 24,
                                   color: Colors.white,
