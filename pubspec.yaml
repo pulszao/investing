@@ -22,6 +22,7 @@ dependencies:
   http: ^0.13.4
   flutter_secure_storage: ^5.0.2
   shimmer: ^2.0.0
+  cloud_firestore: ^4.1.0
 
   #  Minimum requirement for firebase_auth is 'IOS: 10' on Xcode
   #  Xcode under "Runner" -> "Runner" -> "Info" -> "iOS Deployment Target" to version >= 10.0.0
