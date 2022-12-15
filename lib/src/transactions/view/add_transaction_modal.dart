@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -312,6 +314,8 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                     Button(
                       onPressed: () {
                         if (_transactionKey.currentState!.validate() && buyDate != null) {
+                          User? authUser = FirebaseAuth.instance.currentUser;
+
                           showDialog(
                             context: context,
                             builder: (_) => StandardModal(
@@ -373,21 +377,32 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                                   // check for stock
                                   Map? data = await getSingleQuote(code: Provider.of<TransactionProvider>(context, listen: false).getStock()!);
 
+                                  // TODO: remove UserSecureStorage function
                                   // get transaction index
                                   int index = await UserSecureStorage.getTransactionIndex();
 
                                   // save new transaction
-                                  await UserSecureStorage.addTransaction({
-                                    '$index': {
-                                      'operation': operation.name,
-                                      'stock': data!['symbol'],
-                                      'company_name': data['companyName'],
-                                      'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
-                                      'buy_price': price,
-                                      'shares': quantity,
-                                      'sector': sector.sector,
-                                      'fees': fees,
-                                    }
+                                  // await UserSecureStorage.addTransaction({
+                                  //   '$index': {
+                                  //     'operation': operation.name,
+                                  //     'stock': data!['symbol'],
+                                  //     'company_name': data['companyName'],
+                                  //     'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
+                                  //     'buy_price': price,
+                                  //     'shares': quantity,
+                                  //     'sector': sector.sector,
+                                  //     'fees': fees,
+                                  //   }
+                                  // });
+                                  FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').add({
+                                    'operation': operation.name,
+                                    'stock': data!['symbol'],
+                                    'company_name': data['companyName'],
+                                    'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
+                                    'buy_price': price,
+                                    'shares': quantity,
+                                    'sector': sector.sector,
+                                    'fees': fees,
                                   });
 
                                   // update screen

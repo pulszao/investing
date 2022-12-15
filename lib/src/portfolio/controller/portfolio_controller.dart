@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
@@ -70,6 +72,9 @@ class PortfolioProvider extends ChangeNotifier {
 }
 
 Future<List<Map?>> getStocks() async {
+  User? authUser = FirebaseAuth.instance.currentUser;
+  QuerySnapshot<Map<String, dynamic>> data =
+      await FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').orderBy('buy_date', descending: true).get();
   List transactions = await UserSecureStorage.getTransactions();
   Map totals = {};
   List<String>? auxStocks = [];

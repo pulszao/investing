@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/view/cards/stock_watchlist_card.dart';
 import 'package:investing/src/shared/view/modals/loading_modal.dart';
@@ -132,8 +135,24 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
     Provider.of<WatchlistProvider>(context, listen: false).setNewStock(code);
 
     try {
+      User? authUser = FirebaseAuth.instance.currentUser;
+
+      Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote();
+
+      FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) {
+        for (var doc in querySnapshot.docs) {
+          if (doc['stock'] == code && doc['active'] == false) {
+            doc.reference.update({'active': false});
+          }
+        }
+      });
+
+      // TODO: remove UserSecureStorage function
       List<String>? watchlist = await UserSecureStorage.getWatchlist();
+
+      quotes!.remove(code);
       watchlist!.remove(code);
+      Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(quotes);
 
       // update stocks
       UserSecureStorage.setWatchlist(watchlist);
@@ -149,6 +168,9 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
 
   void addStockToWatchlist() async {
     if (_newStockKey.currentState!.validate()) {
+      User? authUser = FirebaseAuth.instance.currentUser;
+
+      // TODO: remove UserSecureStorage function
       List<String>? watchlist = await UserSecureStorage.getWatchlist();
 
       if (!mounted) return;
@@ -162,6 +184,11 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
 
         try {
           watchlist.add(data!['symbol']);
+          FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').add({
+            'stock': data['symbol'],
+            'active': true,
+            'timestamp': DateFormat('dd/MM/yyyy').format(DateTime.now()),
+          });
 
           // save stock locally
           UserSecureStorage.setWatchlist(watchlist);
@@ -210,6 +237,27 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
     if (watchlist!.isNotEmpty) {
       Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote();
 
+      // if (quotes == null) {
+      //   Map? auxQuotes = await getMultipleQuote(codes: [newStock]);
+      //   Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(auxQuotes);
+      //   // update stocks
+      //   UserSecureStorage.setWatchlist([newStock]);
+      //
+      //   stocksWidgets.add(
+      //     StockWatchlistCard(
+      //       stockSymbol: auxQuotes![newStock]['quote']['symbol'],
+      //       stockDescription: auxQuotes[newStock]['quote']['companyName'],
+      //       nowPrice: auxQuotes[newStock]['quote']['latestPrice'].toDouble(),
+      //       dailyChange: (auxQuotes[newStock]['quote']['changePercent'] * 100).toDouble(),
+      //       removeStock: () {
+      //         // pop modal
+      //         Navigator.pop(context);
+      //         removeStockFromWatchlist(code: auxQuotes[newStock]['quote']['symbol']);
+      //       },
+      //     ),
+      //   );
+      // } else {
+
       for (String stock in quotes!.keys) {
         stocksWidgets.add(
           StockWatchlistCard(
@@ -225,6 +273,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
           ),
         );
       }
+      // }
 
       if (newStock != '') {
         // pop loading modal

@@ -14,7 +14,7 @@ Future<dynamic> getSingleQuote({required String code}) async {
 }
 
 Future<dynamic> getMultipleQuote({required List<String> codes}) async {
-  String stocks = codes.join(",");
+  String stocks = codes.toSet().toList().join(","); // only different values
 
   GetData networkHelper = GetData(
     url: Uri.parse('https://cloud.iexapis.com/stable/stock/market/batch?symbols=$stocks&types=quote&token=$kIEXToken'),
