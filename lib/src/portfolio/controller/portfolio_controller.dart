@@ -53,7 +53,11 @@ class PortfolioProvider extends ChangeNotifier {
   }
 
   void setRentability(double currentAsset) {
-    _rentability = ((currentAsset - _total) / _total) * 100;
+    if (currentAsset != 0) {
+      _rentability = ((currentAsset - _total) / _total) * 100;
+    } else {
+      _rentability = 0;
+    }
     notifyListeners();
   }
 

@@ -152,7 +152,11 @@ class _LoginScreenState extends State<LoginScreen> {
                               } else if (authentication == 2) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (BuildContext context) => const RegistrationScreen()),
+                                  MaterialPageRoute(
+                                    builder: (BuildContext context) => RegistrationScreen(
+                                      email: Provider.of<LoginProvider>(context, listen: false).getUsername(),
+                                    ),
+                                  ),
                                 );
                                 // error scaffold modal
                                 showScaffoldModal(
