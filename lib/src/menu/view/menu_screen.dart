@@ -30,11 +30,13 @@ class MenuScreen extends StatefulWidget {
 class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
-    setDataTimer();
+    super.initState();
     buildPortfolioGraph();
     buildSectorGraph();
     fetchSep500Quote(context);
-    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setDataTimer();
+    });
   }
 
   @override
@@ -445,8 +447,10 @@ class _MenuScreenState extends State<MenuScreen> {
     // get data for all parts of app
     fetchStocksData(context);
     fetchWatchlistData(context);
-    const oneSec = Duration(minutes: 1);
-    Timer.periodic(oneSec, (Timer t) => fetchStocksData(context));
-    Timer.periodic(oneSec, (Timer t) => fetchWatchlistData(context));
+    const oneMin = Duration(minutes: 1);
+    Timer.periodic(oneMin, (Timer t) {
+      fetchStocksData(context);
+      fetchWatchlistData(context);
+    });
   }
 }

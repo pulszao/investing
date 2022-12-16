@@ -7,7 +7,6 @@ import 'package:investing/src/shared/view/cards/stock_watchlist_card.dart';
 import 'package:investing/src/shared/view/modals/loading_modal.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:investing/src/watchlist/controller/watchlist_controller.dart';
-import 'package:investing/storage/user_secure_storage.dart';
 import 'package:provider/provider.dart';
 import '../../../services/get_quote/get_quote.dart';
 import '../../constants.dart';
@@ -24,11 +23,13 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
   final _newStockKey = GlobalKey<FormState>();
   TextEditingController stockFormController = TextEditingController();
   List<StockWatchlistCard> stocksWidgets = [];
+  User? authUser = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
-    getStockQuotes();
     super.initState();
+    Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
+    getStockQuotes();
   }
 
   @override
@@ -135,10 +136,9 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
     Provider.of<WatchlistProvider>(context, listen: false).setNewStock(code);
 
     try {
-      User? authUser = FirebaseAuth.instance.currentUser;
-
       Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote();
 
+      // update stocks
       FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) {
         for (var doc in querySnapshot.docs) {
           if (doc['stock'] == code && doc['active'] == false) {
@@ -146,17 +146,8 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
           }
         }
       });
-
-      // TODO: remove UserSecureStorage function
-      List<String>? watchlist = await UserSecureStorage.getWatchlist();
-
       quotes!.remove(code);
-      watchlist!.remove(code);
       Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(quotes);
-
-      // update stocks
-      UserSecureStorage.setWatchlist(watchlist);
-
       getStockQuotes(remove: true);
     } catch (_) {
       // pop loading modal
@@ -168,30 +159,35 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
 
   void addStockToWatchlist() async {
     if (_newStockKey.currentState!.validate()) {
-      User? authUser = FirebaseAuth.instance.currentUser;
-
-      // TODO: remove UserSecureStorage function
-      List<String>? watchlist = await UserSecureStorage.getWatchlist();
+      bool hasStock = false;
 
       if (!mounted) return;
       loadingModalCall(context);
 
       String stock = Provider.of<WatchlistProvider>(context, listen: false).getNewStock();
 
-      if (!watchlist!.contains(stock)) {
+      // check if the stock is already on the watchlist
+      FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) async {
+        if (querySnapshot.docs.isNotEmpty) {
+          for (var doc in querySnapshot.docs) {
+            if (doc['stock'] == stock) {
+              hasStock = true;
+            }
+          }
+        }
+      });
+
+      if (!hasStock) {
         // get stock quote
         Map? data = await getSingleQuote(code: stock);
 
         try {
-          watchlist.add(data!['symbol']);
+          // add stock to firebase
           FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').add({
-            'stock': data['symbol'],
+            'stock': data!['symbol'],
             'active': true,
             'timestamp': DateFormat('dd/MM/yyyy').format(DateTime.now()),
           });
-
-          // save stock locally
-          UserSecureStorage.setWatchlist(watchlist);
 
           getStockQuotes();
         } catch (_) {
@@ -203,7 +199,7 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
           // error scaffold modal
           showScaffoldModal(
             context: context,
-            message: "Desculpa, tivemos problemas ao adicionar '$stock' à sua watchlist.",
+            message: "Sorry, we has a problem adding '$stock' into your watchlist.",
             duration: 3,
           );
 
@@ -231,99 +227,79 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
 
   void getStockQuotes({bool remove = false}) async {
     String newStock = Provider.of<WatchlistProvider>(context, listen: false).getNewStock();
-    List<String>? watchlist = await UserSecureStorage.getWatchlist();
     List<StockWatchlistCard> stocksWidgets = [];
 
-    if (watchlist!.isNotEmpty) {
-      Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote();
+    FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) async {
+      if (querySnapshot.docs.isNotEmpty) {
+        Map? quotes = Provider.of<MenuProvider>(context, listen: false).getWatchlistQuote() ?? {};
 
-      // if (quotes == null) {
-      //   Map? auxQuotes = await getMultipleQuote(codes: [newStock]);
-      //   Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(auxQuotes);
-      //   // update stocks
-      //   UserSecureStorage.setWatchlist([newStock]);
-      //
-      //   stocksWidgets.add(
-      //     StockWatchlistCard(
-      //       stockSymbol: auxQuotes![newStock]['quote']['symbol'],
-      //       stockDescription: auxQuotes[newStock]['quote']['companyName'],
-      //       nowPrice: auxQuotes[newStock]['quote']['latestPrice'].toDouble(),
-      //       dailyChange: (auxQuotes[newStock]['quote']['changePercent'] * 100).toDouble(),
-      //       removeStock: () {
-      //         // pop modal
-      //         Navigator.pop(context);
-      //         removeStockFromWatchlist(code: auxQuotes[newStock]['quote']['symbol']);
-      //       },
-      //     ),
-      //   );
-      // } else {
+        for (String stock in quotes.keys) {
+          stocksWidgets.add(
+            StockWatchlistCard(
+              stockSymbol: quotes[stock]['quote']['symbol'],
+              stockDescription: quotes[stock]['quote']['companyName'],
+              nowPrice: quotes[stock]['quote']['latestPrice'].toDouble(),
+              dailyChange: (quotes[stock]['quote']['changePercent'] * 100).toDouble(),
+              removeStock: () {
+                // pop modal
+                Navigator.pop(context);
+                removeStockFromWatchlist(code: quotes[stock]['quote']['symbol']);
+              },
+            ),
+          );
+        }
+        // }
 
-      for (String stock in quotes!.keys) {
-        stocksWidgets.add(
-          StockWatchlistCard(
-            stockSymbol: quotes[stock]['quote']['symbol'],
-            stockDescription: quotes[stock]['quote']['companyName'],
-            nowPrice: quotes[stock]['quote']['latestPrice'].toDouble(),
-            dailyChange: (quotes[stock]['quote']['changePercent'] * 100).toDouble(),
-            removeStock: () {
-              // pop modal
-              Navigator.pop(context);
-              removeStockFromWatchlist(code: quotes[stock]['quote']['symbol']);
-            },
-          ),
-        );
-      }
-      // }
-
-      if (newStock != '') {
-        // pop loading modal
-        if (!mounted) return;
-        Navigator.pop(context);
-        Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
-        // success scaffold modal
-        showScaffoldModal(
-          context: context,
-          message: "'$newStock' foi ${remove ? 'removido' : 'adicionado'} com sucesso ${remove ? 'da' : 'à'} sua watchlist.",
-          duration: 3,
-          backgroundColor: remove ? kWarningColor : kSuccessColor,
-        );
-      }
-
-      setState(() {
-        buildWidgets = true;
-        stockFormController.clear();
-        this.stocksWidgets = stocksWidgets;
-      });
-    } else {
-      if (!mounted) return;
-      if (newStock != '') {
-        Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
-
-        if (remove == true) {
+        if (newStock != '') {
           // pop loading modal
+          if (!mounted) return;
           Navigator.pop(context);
+          Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
           // success scaffold modal
           showScaffoldModal(
             context: context,
-            message: "'$newStock' foi removido com sucesso da sua watchlist.",
+            message: "'$newStock' foi ${remove ? 'removido' : 'adicionado'} com sucesso ${remove ? 'da' : 'à'} sua watchlist.",
             duration: 3,
-            backgroundColor: Colors.amber,
-          );
-        } else {
-          showScaffoldModal(
-            context: context,
-            message: "Desculpa, tivemos problemas ao adicionar '$newStock' à sua watchlist",
-            duration: 2,
+            backgroundColor: remove ? kWarningColor : kSuccessColor,
           );
         }
-      }
 
-      // no stock was added
-      setState(() {
-        buildWidgets = true;
-        stockFormController.clear();
-        this.stocksWidgets = [];
-      });
-    }
+        setState(() {
+          buildWidgets = true;
+          stockFormController.clear();
+          this.stocksWidgets = stocksWidgets;
+        });
+      } else {
+        if (!mounted) return;
+        if (newStock != '') {
+          Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
+
+          if (remove == true) {
+            // pop loading modal
+            Navigator.pop(context);
+            // success scaffold modal
+            showScaffoldModal(
+              context: context,
+              message: "'$newStock' foi removido com sucesso da sua watchlist.",
+              duration: 3,
+              backgroundColor: Colors.amber,
+            );
+          } else {
+            showScaffoldModal(
+              context: context,
+              message: "Desculpa, tivemos problemas ao adicionar '$newStock' à sua watchlist",
+              duration: 2,
+            );
+          }
+        }
+
+        // no stock was added
+        setState(() {
+          buildWidgets = true;
+          stockFormController.clear();
+          this.stocksWidgets = [];
+        });
+      }
+    });
   }
 }

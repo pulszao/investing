@@ -1,8 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/shared/model/chart_data_model.dart';
-import 'package:investing/storage/user_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class MenuProvider extends ChangeNotifier {
@@ -113,12 +114,22 @@ void fetchStocksData(BuildContext context) async {
   Provider.of<MenuProvider>(context, listen: false).setStocksQuote(stocksQuote);
 }
 
-void fetchWatchlistData(BuildContext context) async {
-  List<String>? watchlist = await UserSecureStorage.getWatchlist();
-  if (watchlist != null) {
-    Map? quotes = await getMultipleQuote(codes: watchlist);
-    Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(quotes);
-  }
+void fetchWatchlistData(BuildContext context) {
+  User? authUser = FirebaseAuth.instance.currentUser;
+
+  FirebaseFirestore.instance.collection('watchlist/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) async {
+    List<String> auxStocks = [];
+
+    if (querySnapshot.docs.isNotEmpty) {
+      for (var doc in querySnapshot.docs) {
+        if (doc['active']) {
+          auxStocks.add(doc['stock']);
+        }
+      }
+      Map? quotes = await getMultipleQuote(codes: auxStocks);
+      Provider.of<MenuProvider>(context, listen: false).setWatchlistQuote(quotes);
+    }
+  });
 }
 
 void fetchSep500Quote(BuildContext context) async {
