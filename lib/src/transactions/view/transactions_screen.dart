@@ -1,16 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investing/src/constants.dart';
 import 'package:investing/src/shared/view/buttons/small_button.dart';
 import 'package:investing/src/shared/view/cards/transaction_card.dart';
 import 'package:investing/src/shared/view/modals/bottom_sheet_modal.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:investing/src/transactions/view/add_transaction_modal.dart';
 import 'package:investing/src/transactions/view/filter_transaction_modal.dart';
-import 'package:investing/storage/user_secure_storage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
-import '../../constants.dart';
 
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({Key? key}) : super(key: key);
@@ -20,6 +21,8 @@ class TransactionsScreen extends StatefulWidget {
 }
 
 class _TransactionsScreenState extends State<TransactionsScreen> {
+  User? authUser = FirebaseAuth.instance.currentUser;
+
   @override
   void initState() {
     getTransactions();
@@ -88,7 +91,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                             return BottomSheetModal(
                               maxHeight: MediaQuery.of(context).size.height * 0.65,
                               backgroundColor: kModalBackgroundColor,
-                              body: [
+                              body: const [
                                 AddTransactionModal(),
                               ],
                             );
@@ -126,26 +129,27 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   void getTransactions() async {
     List<TransactionCard> stocksWidgets = [];
-    List transactions = await UserSecureStorage.getTransactions();
 
-    for (Map? item in transactions) {
-      Map? data = item![item.keys.first];
-      stocksWidgets.add(
-        TransactionCard(
-          id: int.parse(item.keys.first),
-          operation: data!['operation'] == 'buy' ? Operation.buy : Operation.sell,
-          stockSymbol: data['stock'],
-          stockDescription: data['company_name'],
-          buyDate: DateFormat('dd/MM/yyyy').parse(data['buy_date']),
-          buyPrice: data['buy_price'],
-          fees: data['fees'],
-          quantity: data['shares'],
-          sector: data['sector'],
-        ),
-      );
-    }
+    // update stocks
+    FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) {
+      for (var data in querySnapshot.docs) {
+        stocksWidgets.add(
+          TransactionCard(
+            id: data.id,
+            operation: data['operation'] == 'buy' ? Operation.buy : Operation.sell,
+            stockSymbol: data['stock'],
+            stockDescription: data['company_name'],
+            buyDate: DateFormat('dd/MM/yyyy').parse(data['buy_date']),
+            buyPrice: data['buy_price'],
+            fees: data['fees'],
+            quantity: data['shares'],
+            sector: data['sector'],
+          ),
+        );
+      }
 
-    if (!mounted) return;
-    Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
+      if (!mounted) return;
+      Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
+    });
   }
 }

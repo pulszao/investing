@@ -1,16 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:investing/src/constants.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../storage/user_secure_storage.dart';
-import '../../../constants.dart';
-
 class TransactionCard extends StatelessWidget {
-  final int id;
+  final String id;
   final Operation operation;
   final String sector;
   final String stockSymbol;
@@ -44,22 +44,19 @@ class TransactionCard extends StatelessWidget {
             body: 'Are you sure you want to delete $stockSymbol (${DateFormat('dd/MM/yyyy').format(buyDate)}) from your trasactions?',
             confirmButtonLabel: 'Delete',
             confirmButtonFunction: () async {
-              List updatedTransactions = [];
+              User? authUser = FirebaseAuth.instance.currentUser;
               List<TransactionCard> stocksWidgets = [];
-              // get all transactions
-              List transactions = await UserSecureStorage.getTransactions();
 
-              // remove (don't add to updatedTransactions List) selected transaction
-              for (Map? item in transactions) {
-                if (item!.keys.first != '$id') {
-                  updatedTransactions.add(item);
+              // delete transaction
+              FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').doc(id).delete();
 
-                  // build stocks widgets
-                  Map? data = item[item.keys.first];
+              // update transactions
+              FirebaseFirestore.instance.collection('transactions/${authUser.uid}/stocks').get().then((QuerySnapshot querySnapshot) {
+                for (var data in querySnapshot.docs) {
                   stocksWidgets.add(
                     TransactionCard(
-                      id: id,
-                      operation: data!['operation'] == 'buy' ? Operation.buy : Operation.sell,
+                      id: data.id,
+                      operation: data['operation'] == 'buy' ? Operation.buy : Operation.sell,
                       stockSymbol: data['stock'],
                       stockDescription: data['company_name'],
                       buyDate: DateFormat('dd/MM/yyyy').parse(data['buy_date']),
@@ -70,16 +67,13 @@ class TransactionCard extends StatelessWidget {
                     ),
                   );
                 }
-              }
+                Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
+              });
 
-              // update transactions
-              Provider.of<TransactionProvider>(context, listen: false).setTransactionsWidgets(stocksWidgets);
               // rebuild home screen charts
               Provider.of<MenuProvider>(context, listen: false).setRebuild(true);
               // pop modal
               Navigator.pop(context);
-
-              await UserSecureStorage.setTransactions(updatedTransactions);
             },
           ),
         );

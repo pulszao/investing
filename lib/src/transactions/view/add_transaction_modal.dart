@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:investing/services/get_quote/get_quote.dart';
+import 'package:investing/src/constants.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/shared/model/number_formatter_model.dart';
 import 'package:investing/src/shared/model/stocks_sector_model.dart';
@@ -15,12 +16,9 @@ import 'package:investing/src/shared/view/modals/loading_modal.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:investing/src/shared/view/modals/standard_modal.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
-import 'package:investing/storage/user_secure_storage.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'dart:io' show Platform;
-
-import '../../constants.dart';
 
 class AddTransactionModal extends StatefulWidget {
   const AddTransactionModal({Key? key}) : super(key: key);
@@ -377,24 +375,7 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                                   // check for stock
                                   Map? data = await getSingleQuote(code: Provider.of<TransactionProvider>(context, listen: false).getStock()!);
 
-                                  // TODO: remove UserSecureStorage function
-                                  // get transaction index
-                                  int index = await UserSecureStorage.getTransactionIndex();
-
-                                  // save new transaction
-                                  // await UserSecureStorage.addTransaction({
-                                  //   '$index': {
-                                  //     'operation': operation.name,
-                                  //     'stock': data!['symbol'],
-                                  //     'company_name': data['companyName'],
-                                  //     'buy_date': DateFormat('dd/MM/yyyy').format(buyDate),
-                                  //     'buy_price': price,
-                                  //     'shares': quantity,
-                                  //     'sector': sector.sector,
-                                  //     'fees': fees,
-                                  //   }
-                                  // });
-                                  FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').add({
+                                  var newStock = await FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').add({
                                     'operation': operation.name,
                                     'stock': data!['symbol'],
                                     'company_name': data['companyName'],
@@ -408,7 +389,7 @@ class _AddTransactionModalState extends State<AddTransactionModal> {
                                   // update screen
                                   Provider.of<TransactionProvider>(context, listen: false).addTransactionsWidgets(
                                     TransactionCard(
-                                      id: index,
+                                      id: newStock.id,
                                       operation: operation,
                                       stockSymbol: data['symbol'],
                                       stockDescription: data['companyName'],
