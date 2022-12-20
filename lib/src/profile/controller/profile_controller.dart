@@ -28,12 +28,14 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   void setInitials(String? username) {
-    List<String> splitString = username!.toUpperCase().split(' ');
-    if (splitString.length > 1) {
-      _initials = splitString[0][0] + splitString[1][0];
-    } else {
-      _initials = splitString[0][0];
+    if (username != '') {
+      List<String> splitString = username!.toUpperCase().split(' ');
+      if (splitString.length > 1) {
+        _initials = splitString[0][0] + splitString[1][0];
+      } else {
+        _initials = splitString[0][0];
+      }
+      notifyListeners();
     }
-    notifyListeners();
   }
 }

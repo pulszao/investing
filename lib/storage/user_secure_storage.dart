@@ -7,6 +7,8 @@ class UserSecureStorage {
   static const _watchlist = 'watchlist';
   static const _transactions = 'transactions';
   static const _transactionIndex = 'transactionIndex';
+  static const _userEmail = 'userEmail';
+  static const _userPassword = 'userPassword';
 
   static Future setWatchlist(List<String>? data) async {
     String stocks = '';
@@ -67,4 +69,12 @@ class UserSecureStorage {
   static Future setTransactionIndex(int index) async {
     await _storage.write(key: _transactionIndex, value: index.toString());
   }
+
+  static Future setUserEmail(String? data) async => await _storage.write(key: _userEmail, value: data);
+
+  static Future<String?> getUserEmail() async => await _storage.read(key: _userEmail);
+
+  static Future setUserPassword(String? data) async => await _storage.write(key: _userPassword, value: data);
+
+  static Future<String?> getUserPassword() async => await _storage.read(key: _userPassword);
 }

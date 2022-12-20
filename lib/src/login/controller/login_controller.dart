@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:investing/storage/user_secure_storage.dart';
 
 class LoginProvider extends ChangeNotifier {
   String _username = '';
@@ -46,7 +47,7 @@ class LoginProvider extends ChangeNotifier {
 
 Future<int> registerUser({required String email, required String password}) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
     return 0;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'weak-password') {
@@ -65,7 +66,9 @@ Future<int> registerUser({required String email, required String password}) asyn
 
 Future<int> authenticateUser({required String email, required String password}) async {
   try {
-    UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    UserSecureStorage.setUserEmail(email);
+    UserSecureStorage.setUserPassword(password);
     return 0;
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {

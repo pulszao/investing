@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
@@ -31,6 +32,7 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
+    setUserDisplayName();
     buildPortfolioGraph();
     buildSectorGraph();
     fetchSep500Quote(context);
@@ -452,5 +454,15 @@ class _MenuScreenState extends State<MenuScreen> {
       fetchStocksData(context);
       fetchWatchlistData(context);
     });
+  }
+
+  void setUserDisplayName() async {
+    User? authUser = FirebaseAuth.instance.currentUser;
+
+    String? username = authUser!.displayName != '' ? authUser.displayName : authUser.email;
+    if (!mounted) return;
+    Provider.of<ProfileProvider>(context, listen: false).setInitials(username);
+    Provider.of<ProfileProvider>(context, listen: false).setDisplayName(username);
+    Provider.of<ProfileProvider>(context, listen: false).setEmail(authUser.email);
   }
 }
