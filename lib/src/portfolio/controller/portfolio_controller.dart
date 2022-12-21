@@ -5,7 +5,6 @@ import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/rentability/view/top_pick_stock_card.dart';
 import 'package:investing/src/transactions/controller/transactions_controller.dart';
-import 'package:investing/storage/user_secure_storage.dart';
 import 'package:provider/provider.dart';
 
 class PortfolioProvider extends ChangeNotifier {
@@ -77,65 +76,66 @@ class PortfolioProvider extends ChangeNotifier {
 
 Future<List<Map?>> getStocks() async {
   User? authUser = FirebaseAuth.instance.currentUser;
-  QuerySnapshot<Map<String, dynamic>> data =
-      await FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').orderBy('buy_date', descending: true).get();
-  List transactions = await UserSecureStorage.getTransactions();
-  Map totals = {};
-  List<String>? auxStocks = [];
   List<Map?> stocks = [];
-  totals['total'] = 0;
 
-  for (Map? item in transactions) {
-    Map? data = item![item.keys.first];
+  await FirebaseFirestore.instance
+      .collection('transactions/${authUser!.uid}/stocks')
+      .orderBy('buy_date', descending: true)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    Map totals = {};
+    List<String>? auxStocks = [];
+    totals['total'] = 0;
 
-    if (!auxStocks.contains(data!['stock'])) {
-      auxStocks.add(data['stock']);
+    for (var data in querySnapshot.docs) {
+      if (!auxStocks.contains(data['stock'])) {
+        auxStocks.add(data['stock']);
+      }
     }
-  }
 
-  for (String stock in auxStocks) {
-    Map stockInfo = {};
-    for (Map? item in transactions) {
-      Map? data = item![item.keys.first];
-      if (data!['operation'] == Operation.buy.name) {
-        if (data['stock'] == stock) {
-          totals['total'] += (data['shares'] * data['buy_price'] + data['fees']);
-          if (stockInfo.isEmpty) {
-            stockInfo['company_name'] = data['company_name'];
-            stockInfo['buy_price'] = (data['fees'] / data['shares'] + data['buy_price']);
-            stockInfo['shares'] = data['shares'];
-            stockInfo['sector'] = data['sector'];
-            stockInfo['total'] = (data['shares'] * data['buy_price'] + data['fees']);
-          } else {
-            stockInfo['buy_price'] =
-                ((stockInfo['buy_price'] * stockInfo['shares']) + ((data['fees'] / data['shares'] + data['buy_price']) * data['shares'])) /
-                    (stockInfo['shares'] + data['shares']);
-            stockInfo['shares'] += data['shares'];
-            stockInfo['total'] += (data['shares'] * data['buy_price'] + data['fees']);
+    for (String stock in auxStocks) {
+      Map stockInfo = {};
+      for (var data in querySnapshot.docs) {
+        if (data['operation'] == Operation.buy.name) {
+          if (data['stock'] == stock) {
+            totals['total'] += (data['shares'] * data['buy_price'] + data['fees']);
+            if (stockInfo.isEmpty) {
+              stockInfo['company_name'] = data['company_name'];
+              stockInfo['buy_price'] = (data['fees'] / data['shares'] + data['buy_price']);
+              stockInfo['shares'] = data['shares'];
+              stockInfo['sector'] = data['sector'];
+              stockInfo['total'] = (data['shares'] * data['buy_price'] + data['fees']);
+            } else {
+              stockInfo['buy_price'] =
+                  ((stockInfo['buy_price'] * stockInfo['shares']) + ((data['fees'] / data['shares'] + data['buy_price']) * data['shares'])) /
+                      (stockInfo['shares'] + data['shares']);
+              stockInfo['shares'] += data['shares'];
+              stockInfo['total'] += (data['shares'] * data['buy_price'] + data['fees']);
+            }
           }
-        }
-      } else {
-        if (data['stock'] == stock) {
-          totals['total'] -= (data['shares'] * data['buy_price'] + data['fees']);
-          if (stockInfo.isEmpty) {
-            stockInfo['company_name'] = data['company_name'];
-            stockInfo['buy_price'] = (data['fees'] / data['shares'] + data['buy_price']);
-            stockInfo['shares'] = data['shares'];
-            stockInfo['sector'] = data['sector'];
-            stockInfo['total'] = (data['shares'] * data['buy_price'] + data['fees']);
-          } else {
-            stockInfo['buy_price'] =
-                ((stockInfo['buy_price'] * stockInfo['shares']) - ((data['fees'] / data['shares'] + data['buy_price']) * data['shares'])) /
-                    (stockInfo['shares'] + data['shares']);
-            stockInfo['shares'] -= data['shares'];
-            stockInfo['total'] -= (data['shares'] * data['buy_price'] + data['fees']);
+        } else {
+          if (data['stock'] == stock) {
+            totals['total'] -= (data['shares'] * data['buy_price'] + data['fees']);
+            if (stockInfo.isEmpty) {
+              stockInfo['company_name'] = data['company_name'];
+              stockInfo['buy_price'] = (data['fees'] / data['shares'] + data['buy_price']);
+              stockInfo['shares'] = data['shares'];
+              stockInfo['sector'] = data['sector'];
+              stockInfo['total'] = (data['shares'] * data['buy_price'] + data['fees']);
+            } else {
+              stockInfo['buy_price'] =
+                  ((stockInfo['buy_price'] * stockInfo['shares']) - ((data['fees'] / data['shares'] + data['buy_price']) * data['shares'])) /
+                      (stockInfo['shares'] + data['shares']);
+              stockInfo['shares'] -= data['shares'];
+              stockInfo['total'] -= (data['shares'] * data['buy_price'] + data['fees']);
+            }
           }
         }
       }
+      stocks.add({stock: stockInfo});
     }
-    stocks.add({stock: stockInfo});
-  }
-  stocks.add({'total': totals});
+    stocks.add({'total': totals});
+  });
 
   return stocks;
 }
@@ -176,7 +176,7 @@ Future<List<Map?>> getSectors() async {
 }
 
 Future<Map?> getStocksQuote(BuildContext context) async {
-  List transactions = await UserSecureStorage.getTransactions();
+  User? authUser = FirebaseAuth.instance.currentUser;
   List<String>? stocks = [];
   Map? stocksShares = {};
   Map? stocksQuotes = {};
@@ -184,14 +184,20 @@ Future<Map?> getStocksQuote(BuildContext context) async {
   double weight = 0;
   double dailyChange = 0;
 
-  for (Map? item in transactions) {
-    // add stocks to a list
-    stocks.add(item![item.keys.first]['stock']);
-    stocksShares[item[item.keys.first]['stock']] = {
-      'stock': item[item.keys.first]['stock'],
-      'shares': item[item.keys.first]['shares'],
-    };
-  }
+  await FirebaseFirestore.instance
+      .collection('transactions/${authUser!.uid}/stocks')
+      .orderBy('buy_date', descending: true)
+      .get()
+      .then((QuerySnapshot querySnapshot) {
+    for (var data in querySnapshot.docs) {
+      // add stocks to a list
+      stocks.add(data['stock']);
+      stocksShares[data['stock']] = {
+        'stock': data['stock'],
+        'shares': data['shares'],
+      };
+    }
+  });
 
   // get stocks quote
   if (stocks.isNotEmpty) {
