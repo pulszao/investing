@@ -1,4 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:investing/src/login/view/login_screen.dart';
+import 'package:investing/src/profile/controller/profile_controller.dart';
+import 'package:investing/src/shared/view/buttons/button.dart';
+import 'package:investing/src/shared/view/modals/bottom_sheet_modal.dart';
+import 'package:provider/provider.dart';
 import '../../constants.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,6 +21,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    String? username = Provider.of<ProfileProvider>(context).getDisplayName();
+    String? email = Provider.of<ProfileProvider>(context).getEmail();
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -27,7 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Lucas Canale Pulsz',
+                    username ?? 'user',
                     style: kBaseTextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.w600,
@@ -50,7 +59,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             const SizedBox(width: 12.0),
                             Expanded(
                               child: Text(
-                                "lucasp@vendabem.com.br",
+                                email ?? '',
                                 style: kBaseTextStyle(
                                   fontSize: 18.0,
                                 ),
@@ -67,6 +76,73 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Column(
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Button(
+                        onPressed: () {
+                          showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (BuildContext context) {
+                              return BottomSheetModal(
+                                maxHeight: MediaQuery.of(context).size.height * 0.65,
+                                backgroundColor: kModalBackgroundColor,
+                                body: [
+                                  Text(
+                                    'See you later...',
+                                    style: kBaseTextStyle(
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Are you sure you want to logout the app?',
+                                    style: kBaseTextStyle(
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Button(
+                                        onPressed: () async {
+                                          await FirebaseAuth.instance.signOut();
+
+                                          if (!mounted) return;
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(builder: (BuildContext context) => const LoginScreen()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                        },
+                                        text: 'Confirm',
+                                        width: 100,
+                                        backgroundColor: kColorScheme.surface,
+                                      ),
+                                      const SizedBox(width: 30),
+                                      Button(
+                                        onPressed: () => Navigator.pop(context),
+                                        text: 'Cancel',
+                                        width: 100,
+                                        backgroundColor: kColorScheme.surface,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        text: 'Logout',
+                        width: 100,
+                        materialIcon: Icons.logout,
+                        backgroundColor: kColorScheme.surface,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
                   Text(
                     'Data provider for free via EDX Cloud API.',
                     textAlign: TextAlign.center,
