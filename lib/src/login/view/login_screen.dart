@@ -6,6 +6,7 @@ import 'package:investing/src/login/view/registration_screen.dart';
 import 'package:investing/src/menu/view/menu_screen.dart';
 import 'package:investing/src/profile/controller/profile_controller.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
+import 'package:investing/src/shared/view/modals/loading_modal.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -129,12 +130,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         Button(
                           onPressed: () async {
                             if (loginKey.currentState!.validate()) {
+                              loadingModalCall(context);
                               // register user
                               int authentication = await authenticateUser(
                                 email: Provider.of<LoginProvider>(context, listen: false).getUsername(),
                                 password: Provider.of<LoginProvider>(context, listen: false).getPassword(),
                               );
                               if (!mounted) return;
+
+                              Navigator.pop(context);
 
                               if (authentication == 0) {
                                 Navigator.pushAndRemoveUntil(
