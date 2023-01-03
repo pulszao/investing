@@ -2,10 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:investing/src/login/view/login_screen.dart';
 import 'package:investing/src/profile/controller/profile_controller.dart';
+import 'package:investing/src/profile/view/profile_edit_screen.dart';
 import 'package:investing/src/shared/view/buttons/button.dart';
 import 'package:investing/src/shared/view/modals/bottom_sheet_modal.dart';
 import 'package:provider/provider.dart';
-import '../../constants.dart';
+import 'package:investing/src/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({
@@ -35,6 +36,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (BuildContext context) => const ProfileEditScreen()),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateColor.resolveWith((_) => kColorScheme.surface),
+                          foregroundColor: MaterialStateColor.resolveWith((_) => kColorScheme.onSurface),
+                        ),
+                        child: const Text('Edit'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
                   Text(
                     username ?? 'user',
                     style: kBaseTextStyle(
