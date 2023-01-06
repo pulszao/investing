@@ -131,7 +131,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     List<TransactionCard> stocksWidgets = [];
 
     // update stocks
-    FirebaseFirestore.instance.collection('transactions/${authUser!.uid}/stocks').get().then((QuerySnapshot querySnapshot) {
+    FirebaseFirestore.instance
+        .collection('transactions/${authUser!.uid}/stocks')
+        .orderBy('buy_date', descending: true)
+        .get()
+        .then((QuerySnapshot querySnapshot) {
       for (var data in querySnapshot.docs) {
         stocksWidgets.add(
           TransactionCard(
