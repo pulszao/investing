@@ -25,6 +25,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
+    Provider.of<TransactionProvider>(context, listen: false).setFilteredTransactionsWidgets([]);
     getTransactions();
     super.initState();
   }
@@ -32,6 +33,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   @override
   Widget build(BuildContext context) {
     List<TransactionCard> transactionsWidgets = Provider.of<TransactionProvider>(context).getTransactionsWidgets();
+    List<TransactionCard> filteredTransactionsWidgets = Provider.of<TransactionProvider>(context).getFilteredTransactionsWidgets();
 
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
@@ -49,7 +51,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
                               Padding(
                                 padding: EdgeInsets.only(bottom: Platform.isIOS ? 45.0 : 60),
                                 child: Column(
-                                  children: transactionsWidgets
+                                  children: (filteredTransactionsWidgets.isNotEmpty ? filteredTransactionsWidgets : transactionsWidgets)
                                       .map((item) => Padding(
                                             padding: const EdgeInsets.symmetric(vertical: 6.0),
                                             child: item,
@@ -137,6 +139,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var data in querySnapshot.docs) {
+        Provider.of<TransactionProvider>(context, listen: false).addStock(data['stock']);
         stocksWidgets.add(
           TransactionCard(
             id: data.id,

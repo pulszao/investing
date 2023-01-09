@@ -16,7 +16,44 @@ class TransactionProvider extends ChangeNotifier {
   double _quantity = 0;
   double _price = 0;
   double _fees = 0;
+  List<String> _stocks = [];
+  List<String> _filterStocks = [];
   List<TransactionCard> _transactions = [];
+  List<TransactionCard> _filteredTransactions = [];
+
+  void setFilterStocks(List<String> data) {
+    _filterStocks = data;
+    notifyListeners();
+  }
+
+  List<String> getFilterStocks() {
+    return _filterStocks;
+  }
+
+  void addStock(String transaction) {
+    if (!_stocks.contains(transaction)) {
+      _stocks.add(transaction);
+    }
+    notifyListeners();
+  }
+
+  List<String> getStocks() {
+    return _stocks;
+  }
+
+  void addFilteredTransactionsWidgets(TransactionCard transaction) {
+    _filteredTransactions.add(transaction);
+    notifyListeners();
+  }
+
+  void setFilteredTransactionsWidgets(List<TransactionCard> transaction) {
+    _filteredTransactions = transaction;
+    notifyListeners();
+  }
+
+  List<TransactionCard> getFilteredTransactionsWidgets() {
+    return _filteredTransactions;
+  }
 
   void addTransactionsWidgets(TransactionCard transaction) {
     _transactions.add(transaction);
