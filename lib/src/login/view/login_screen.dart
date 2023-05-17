@@ -1,5 +1,4 @@
 import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 import 'package:investing/src/constants.dart';
 import 'package:investing/src/login/view/registration_screen.dart';
@@ -29,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
     FirebaseAuth.instance.idTokenChanges().listen((User? user) {
       if (user != null) {
         String? username = user.displayName ?? user.email;
-        Provider.of<ProfileProvider>(context, listen: false).setInitials(username);
+        Provider.of<ProfileProvider>(context, listen: false).setInitials(username ?? '');
         Provider.of<ProfileProvider>(context, listen: false).setDisplayName(username);
         Provider.of<ProfileProvider>(context, listen: false).setEmail(user.email);
 
@@ -44,6 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
       child: Scaffold(
+        backgroundColor: kColorScheme.background,
         body: Stack(
           children: [
             SafeArea(
@@ -167,6 +167,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   backgroundColor: kWarningColor,
                                   context: context,
                                   message: "Username not registered yet!",
+                                  duration: 2,
+                                );
+                              } else if (authentication == 4) {
+                                // error scaffold modal
+                                showScaffoldModal(
+                                  context: context,
+                                  message: "Too many attempts. Try again later.",
                                   duration: 2,
                                 );
                               } else {

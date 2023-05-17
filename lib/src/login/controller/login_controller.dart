@@ -77,6 +77,9 @@ Future<int> authenticateUser({required String email, required String password}) 
     } else if (e.code == 'wrong-password') {
       // print('Wrong password provided for that user.');
       return 1;
+    } else if (e.code == 'too-many-requests') {
+      // print('Too many requests.');
+      return 4;
     }
   } catch (e) {
     // print(e);

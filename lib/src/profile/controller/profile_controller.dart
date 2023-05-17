@@ -27,9 +27,9 @@ class ProfileProvider extends ChangeNotifier {
     return _initials;
   }
 
-  void setInitials(String? username) {
+  void setInitials(String username) {
     if (username != '') {
-      List<String> splitString = username!.toUpperCase().split(' ');
+      List<String> splitString = username.toUpperCase().split(' ');
       if (splitString.length > 1) {
         _initials = splitString[0][0] + splitString[1][0];
       } else {
