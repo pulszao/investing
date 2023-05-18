@@ -24,6 +24,8 @@ class _PortfolioSectorScreen extends State<PortfolioSectorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kColorScheme.background,
+      appBar: kBaseAppBar(context),
       body: SafeArea(
         child: sectorsWidgets.isNotEmpty
             ? SingleChildScrollView(

@@ -34,6 +34,8 @@ class _RentabilityScreenState extends State<RentabilityScreen> {
     List<TopPickStockCard> topStocksLosers = Provider.of<PortfolioProvider>(context).getTopStocksLosers();
 
     return Scaffold(
+      backgroundColor: kColorScheme.background,
+      appBar: kBaseAppBar(context),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(

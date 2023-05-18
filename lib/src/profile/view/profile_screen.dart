@@ -26,6 +26,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String? email = Provider.of<ProfileProvider>(context).getEmail();
 
     return Scaffold(
+      backgroundColor: kColorScheme.background,
+      appBar: kBaseAppBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(30.0),

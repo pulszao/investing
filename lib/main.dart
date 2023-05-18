@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:investing/src/login/controller/login_controller.dart';
 import 'package:investing/src/login/view/login_screen.dart';
@@ -37,9 +38,12 @@ class Investing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(statusBarColor: kColorScheme.surface),
-    // );
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark, // IOS
+        statusBarIconBrightness: Brightness.light, // Android
+      ),
+    );
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,

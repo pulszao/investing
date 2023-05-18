@@ -37,6 +37,8 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
       child: Scaffold(
+        backgroundColor: kColorScheme.background,
+        appBar: kBaseAppBar(context),
         body: SafeArea(
           child: !buildWidgets
               ? kCircularLoading

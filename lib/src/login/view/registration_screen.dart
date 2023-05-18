@@ -5,9 +5,7 @@ import 'package:investing/src/shared/view/buttons/button.dart';
 import 'package:investing/src/shared/view/modals/loading_modal.dart';
 import 'package:investing/src/shared/view/modals/scaffold_modal.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
-import '../controller/login_controller.dart';
+import 'package:investing/src/login/controller/login_controller.dart';
 
 class RegistrationScreen extends StatefulWidget {
   final String? email;
@@ -25,11 +23,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
       child: Scaffold(
+        backgroundColor: kColorScheme.background,
         body: SafeArea(
           child: Center(
             child: SingleChildScrollView(
@@ -164,7 +161,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         text: 'Register',
                         elevation: 0,
                         backgroundColor: kColorScheme.primary,
-                        textColor: Colors.white,
+                        textColor: kColorScheme.onSurface,
                       ),
                       SizedBox(
                         height: MediaQuery.of(context).viewInsets.bottom == 0 ? 120 : 0,

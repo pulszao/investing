@@ -38,6 +38,8 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(), // dismiss keyboard
       child: Scaffold(
+        backgroundColor: kColorScheme.background,
+        appBar: kBaseAppBar(context),
         body: Stack(
           children: [
             SafeArea(

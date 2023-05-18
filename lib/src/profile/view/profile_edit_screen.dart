@@ -27,6 +27,8 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
     String? email = Provider.of<ProfileProvider>(context).getEmail();
 
     return Scaffold(
+      backgroundColor: kColorScheme.background,
+      appBar: kBaseAppBar(context),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 30.0, horizontal: 40.0),

@@ -3,34 +3,34 @@ import 'package:flutter/material.dart';
 const String kIEXToken = 'YOUR_API_TOKEN'; // TODO: create your own API KEY
 
 const ColorScheme kColorScheme = ColorScheme.dark(
-  background: Color(0xFF303030),
-  onBackground: Color(0xFF545454),
-  surface: Color(0xFF08284A),
-  onSurface: Colors.white,
-  primary: Color(0xFF58B4FD),
-  onPrimary: Color(0xFF0F3D65),
+  background: Color(0xFF000F1A),
+  onBackground: Color(0xFF313131),
+  surface: Color(0xFF14233E),
+  onSurface: Color(0xFFFCF9EE),
+  primary: Color(0xFF5AB0FF),
+  onPrimary: Color(0xFF27568E),
   secondary: Color(0xFFFB615B),
   onSecondary: Color(0xFF631310),
   tertiary: Color(0xFF61D761),
   onTertiary: Color(0xFF0E520E),
-  error: Color(0xFFE74C3C),
+  error: Color(0xFFCA4B30),
   onError: Color(0xFF6E4D0F),
   brightness: Brightness.dark,
   surfaceTint: Colors.white,
 );
 Color kDisabledButtonColor = Colors.grey.shade200;
 
-Color kPrimaryBlue = const Color(0xFF58B4FD);
-Color kSecondaryBlue = const Color(0xFF0F3D65);
-Color kPrimaryRed = const Color(0xFFFB615B);
-Color kSecondaryRed = const Color(0xFF631310);
-Color kPrimaryGreen = const Color(0xFF61D761);
-Color kSecondaryGreen = const Color(0xFF0E520E);
-Color kPrimaryPurple = const Color(0xFF7964F1);
-Color kSecondaryPurple = const Color(0xFF201369);
-Color kPrimaryYellow = const Color(0xFFFEC861);
-Color kSecondaryYellow = const Color(0xFF6E4D0F);
-Color kTableHeadingColor = const Color(0xFF08284A);
+// Color kPrimaryBlue = const Color(0xFF58B4FD);
+// Color kSecondaryBlue = const Color(0xFF0F3D65);
+// Color kPrimaryRed = const Color(0xFFFB615B);
+// Color kSecondaryRed = const Color(0xFF631310);
+// Color kPrimaryGreen = const Color(0xFF61D761);
+// Color kSecondaryGreen = const Color(0xFF0E520E);
+// Color kPrimaryPurple = const Color(0xFF7964F1);
+// Color kSecondaryPurple = const Color(0xFF201369);
+// Color kPrimaryYellow = const Color(0xFFFEC861);
+// Color kSecondaryYellow = const Color(0xFF6E4D0F);
+// Color kTableHeadingColor = const Color(0xFF08284A);
 Color kModalBackgroundColor = const Color(0xFF161616);
 Color kMutedTextColor = const Color(0xFFCCCCCC);
 Color kSuccessColor = Colors.green;
@@ -96,3 +96,20 @@ Widget loginLogoImage = const Hero(
     height: 130.0,
   ),
 );
+
+AppBar kBaseAppBar(BuildContext context) {
+  return AppBar(
+    toolbarHeight: 45.0,
+    backgroundColor: kColorScheme.surface,
+    centerTitle: true,
+    title: const Image(
+      image: AssetImage('images/candlestick-chart.png'),
+      height: 30.0,
+    ),
+    leading: BackButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    ),
+  );
+}
