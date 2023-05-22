@@ -70,6 +70,7 @@ class _MenuScreenState extends State<MenuScreen> {
     }
 
     return Scaffold(
+      backgroundColor: kColorScheme.background,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -468,9 +469,9 @@ class _MenuScreenState extends State<MenuScreen> {
   void setUserDisplayName() async {
     User? authUser = FirebaseAuth.instance.currentUser;
 
-    String? username = authUser!.displayName != '' ? authUser.displayName : authUser.email;
+    String? username = authUser!.displayName != null && authUser.displayName != '' ? authUser.displayName : authUser.email;
     if (!mounted) return;
-    Provider.of<ProfileProvider>(context, listen: false).setInitials(username);
+    Provider.of<ProfileProvider>(context, listen: false).setInitials(username ?? '');
     Provider.of<ProfileProvider>(context, listen: false).setDisplayName(username);
     Provider.of<ProfileProvider>(context, listen: false).setEmail(authUser.email);
   }

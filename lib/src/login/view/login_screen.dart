@@ -201,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           text: 'Register',
                           elevation: 0,
                           backgroundColor: kColorScheme.onPrimary,
-                          textColor: kColorScheme.primary,
+                          textColor: kColorScheme.onSurface,
                         ),
                         SizedBox(
                           height: MediaQuery.of(context).viewInsets.bottom == 0 ? 120 : 0,
