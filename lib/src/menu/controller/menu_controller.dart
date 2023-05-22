@@ -131,11 +131,3 @@ void fetchWatchlistData(BuildContext context) {
     }
   });
 }
-
-void fetchSep500Quote(BuildContext context) async {
-  Map? sep500 = await getSingleQuote(code: 'SPY'); // ETF that represents S&P500
-
-  if (sep500 != null) {
-    Provider.of<MenuProvider>(context, listen: false).setSep500(sep500['changePercent'] * 100);
-  }
-}

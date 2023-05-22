@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:investing/services/get_quote/get_quote.dart';
 import 'package:investing/src/menu/controller/menu_controller.dart';
 import 'package:investing/src/portfolio/controller/portfolio_controller.dart';
 import 'package:investing/src/portfolio/view/portfolio_screen.dart';
@@ -29,15 +30,23 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  void fetchSep500Quote() async {
+    Map? sep500 = await getSingleQuote(code: 'SPY'); // ETF that represents S&P500
+
+    if (sep500 != null && mounted) {
+      Provider.of<MenuProvider>(context, listen: false).setSep500(sep500['changePercent'] * 100);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    setUserDisplayName();
-    buildPortfolioGraph();
-    buildSectorGraph();
-    fetchSep500Quote(context);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       setDataTimer();
+      fetchSep500Quote();
+      buildPortfolioGraph();
+      buildSectorGraph();
+      setUserDisplayName();
     });
   }
 

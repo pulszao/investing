@@ -25,9 +25,11 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   @override
   void initState() {
-    Provider.of<TransactionProvider>(context, listen: false).setFilteredTransactionsWidgets([]);
-    getTransactions();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<TransactionProvider>(context, listen: false).setFilteredTransactionsWidgets([]);
+      getTransactions();
+    });
   }
 
   @override

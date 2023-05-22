@@ -57,6 +57,7 @@ class _ProfileEditScreenState extends State<ProfileEditScreen> {
                             message: "Display name updated!",
                             duration: 2,
                           );
+                          Navigator.pop(context); // pop profile screen
                         }
                       },
                       style: ButtonStyle(

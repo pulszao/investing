@@ -28,8 +28,10 @@ class _WatchlistScreenState extends State<WatchlistScreen> {
   @override
   void initState() {
     super.initState();
-    Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
-    getStockQuotes();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<WatchlistProvider>(context, listen: false).setNewStock('');
+      getStockQuotes();
+    });
   }
 
   @override
